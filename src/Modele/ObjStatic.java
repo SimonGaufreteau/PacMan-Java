@@ -1,4 +1,5 @@
 package Modele;
 
-public class ObjStatic {
+public enum ObjStatic {
+    MUR,VIDE
 }

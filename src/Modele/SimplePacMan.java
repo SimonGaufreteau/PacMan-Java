@@ -16,19 +16,24 @@ import java.util.logging.Logger;
 public class SimplePacMan extends Entite {
     private Grille grille;
     Random r = new Random();
+    int delay;
 
 
-    public SimplePacMan(Grille grille){
+    public SimplePacMan(Grille grille,int delay){
         this.grille=grille;
+        this.delay=delay;
     }
     @Override
     public void run() {
         while(true) { // spm descent dasn la grille à chaque pas de temps
-            action();
-            notifyObservers(); // notification de l'observer
-
             try {
-                Thread.sleep(300); // pause
+                action();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            notifyObservers(); // notification de l'observer
+            try {
+                Thread.sleep(delay); // pause
             } catch (InterruptedException ex) {
                 Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -39,20 +44,20 @@ public class SimplePacMan extends Entite {
 
 
     @Override
-    public void action() {
-        int delta = r.nextInt(3);
+    public void action() throws Exception {
+        int delta = r.nextInt(4);
 
-        switch (delta) {
-            case 0 :
-                if(grille.OkDepl(Depl.HAUT,this))
-                    grille.depl(Depl.HAUT,this);
-                break;
-            case 1 :
+        Depl depl=Depl.values()[delta];
 
-        }
-
-        //System.out.println(x + " - " + y);
+        if(grille.OkDepl(depl,this))
+            grille.depl(depl,this);
 
         setChanged();
     }
+
+    @Override
+    public void start() {
+        new Thread(this).start();
+    }
+
 }

@@ -5,8 +5,8 @@
  */
 package VueControleur;
 
-import Modele.Entite;
-import Modele.Fantome;
+import Modele.Grille;
+import Modele.ObjStatic;
 import Modele.SimplePacMan;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -29,29 +29,18 @@ public class SimpleVC extends Application {
     public final int SIZE_X =10;
     public final int SIZE_Y = 10;
 
-    public Map<Entite, Point> map;
-
-    public void updateMap(){
+    Grille grille;
+    /*public void updateMap(){
         Iterator e = map.entrySet().iterator();
         while (e.hasNext()){
             e.next();
         }
-    }
+    }*/
 
     @Override
     public void start(Stage primaryStage) {
 
-        map = new HashMap<>();
-        int n=4;
-        Random r = new Random();
-        for (int i=0;i<n;i++){
-            map.put(new Fantome(),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
-        }
-
-
-
-        SimplePacMan spm = new SimplePacMan(SIZE_X, SIZE_Y); // initialisation du modèle
-        map.put(spm,new Point(spm.getX(),spm.getY()));
+        grille=new Grille(SIZE_X,SIZE_Y);
         GridPane grid = new GridPane(); // création de la grille
 
         // Pacman.svg.png
@@ -59,7 +48,7 @@ public class SimpleVC extends Application {
 
         Image imPM = new Image("Pacman.png"); // préparation des images
         Image imVide = new Image("Vide.png");
-
+        Image imBrique = new Image("Brique.jpg");
         //img.setScaleY(0.01);
         //img.setScaleX(0.01);
 
@@ -79,15 +68,18 @@ public class SimpleVC extends Application {
         Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
             public void update(Observable o, Object arg) {
+                Point p = grille.getPacManCoord();
+                Random r = new Random();
                 for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
                     for (int j = 0; j < SIZE_Y; j++) {
-
-                        if (spm.getX() == i && spm.getY() == j) { // spm est à la position i, j => le dessiner
+                        if (p.x == i && p.y == j) { // spm est à la position i, j => le dessiner
                             tab[i][j].setImage(imPM);
 
                         } else {
-
-                            tab[i][j].setImage(imVide);
+                            if(grille.getObjStatic(i,j)== ObjStatic.MUR)
+                                tab[i][j].setImage(imBrique);
+                            else
+                                tab[i][j].setImage(imVide);
                         }
 
                     }
@@ -96,8 +88,7 @@ public class SimpleVC extends Application {
         };
 
 
-
-
+        SimplePacMan spm = grille.getPacMan();
 
         spm.addObserver(o);
         spm.start(); // on démarre spm
@@ -117,7 +108,7 @@ public class SimpleVC extends Application {
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
                 if (event.isShiftDown()) {
-                    spm.initXY(); // si on clique sur shift, on remet spm en haut à gauche
+                    grille.setPointEntite(spm,0,0); // si on clique sur shift, on remet spm en haut à gauche
                 }
             }
         });

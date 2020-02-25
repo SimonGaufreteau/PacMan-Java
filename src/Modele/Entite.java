@@ -4,5 +4,7 @@ import java.util.Observable;
 
 
 public abstract class Entite extends Observable implements Runnable {
-    public abstract void action();
+    public abstract void action() throws Exception;
+
+    public abstract void start();
 }
