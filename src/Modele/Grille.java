@@ -26,7 +26,7 @@ public class Grille {
         for(int i=0;i<SIZE_X;i++){
             for (int j=0;j<SIZE_Y;j++){
                 if(i==0&&j==0) grilleObj[i][j]=ObjStatic.VIDE;
-                if(r.nextInt(100)<80)
+                else if(r.nextInt(100)<80)
                     grilleObj[i][j]=ObjStatic.VIDE;
                 else grilleObj[i][j]=ObjStatic.MUR;
             }
@@ -87,13 +87,14 @@ public class Grille {
 
     public boolean OkDepl(Depl depl,Entite e) throws Exception {
         Point p = map.get(e);
+        if(depl==null) throw new Exception("Invalid direction.");
         if(p==null) throw new Exception("Invalid entity.");
         switch(depl){
             case HAUT:
-                if(p.y==0) return !isVide(p.x,SIZE_Y-1);
+                if(p.y==0) return isVide(p.x,SIZE_Y-1);
                 return isVide(p.x,p.y-1);
             case BAS:
-                if(p.y==SIZE_Y-1) return !isVide(p.x,0);
+                if(p.y==SIZE_Y-1) return isVide(p.x,0);
                 return isVide(p.x,p.y+1);
             case DROIT:
                 if(p.x+1==SIZE_X) return isVide(0,p.y);
@@ -101,9 +102,8 @@ public class Grille {
             case GAUCHE:
                 if(p.x==0) return isVide(SIZE_X-1,p.y);
                 return isVide(p.x-1,p.y);
-            default:
-                throw new Exception("Invalid deplacement.");
         }
+        return false;
     }
 
     private boolean isVide(int x, int y){

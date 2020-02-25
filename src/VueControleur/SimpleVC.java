@@ -5,9 +5,7 @@
  */
 package VueControleur;
 
-import Modele.Grille;
-import Modele.ObjStatic;
-import Modele.SimplePacMan;
+import Modele.*;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -18,7 +16,10 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.*;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
 
 /**
  *
@@ -49,6 +50,7 @@ public class SimpleVC extends Application {
         Image imPM = new Image("Pacman.png"); // préparation des images
         Image imVide = new Image("Vide.png");
         Image imBrique = new Image("Brique.jpg");
+        Image imFantome = new Image("Fantome.jpg");
         //img.setScaleY(0.01);
         //img.setScaleX(0.01);
 
@@ -72,17 +74,19 @@ public class SimpleVC extends Application {
                 Random r = new Random();
                 for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
                     for (int j = 0; j < SIZE_Y; j++) {
-                        if (p.x == i && p.y == j) { // spm est à la position i, j => le dessiner
-                            tab[i][j].setImage(imPM);
-
-                        } else {
-                            if(grille.getObjStatic(i,j)== ObjStatic.MUR)
-                                tab[i][j].setImage(imBrique);
-                            else
-                                tab[i][j].setImage(imVide);
-                        }
-
+                        if(grille.getObjStatic(i,j)== ObjStatic.MUR)
+                            tab[i][j].setImage(imBrique);
+                        else
+                            tab[i][j].setImage(imVide);
                     }
+                }
+                Map<Entite,Point> map= grille.getMap();
+                for(Entite e : map.keySet()){
+                    Point point=map.get(e);
+                    if(e instanceof SimplePacMan)
+                        tab[point.x][point.y].setImage(imPM);
+                    else if (e instanceof Fantome)
+                        tab[point.x][point.y].setImage(imFantome);
                 }
             }
         };
@@ -108,7 +112,25 @@ public class SimpleVC extends Application {
             @Override
             public void handle(javafx.scene.input.KeyEvent event) {
                 if (event.isShiftDown()) {
-                    grille.setPointEntite(spm,0,0); // si on clique sur shift, on remet spm en haut à gauche
+                    grille.setPointEntite(spm, 0, 0); // si on clique sur shift, on remet spm en haut à gauche
+                }
+                try {
+                    switch (event.getCode()){
+                        case LEFT:
+                            spm.setDirection(Depl.GAUCHE);
+                            break;
+                        case RIGHT:
+                            spm.setDirection(Depl.DROIT);
+                            break;
+                        case UP:
+                            spm.setDirection(Depl.HAUT);
+                            break;
+                        case DOWN:
+                            spm.setDirection(Depl.BAS);
+                            break;
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         });

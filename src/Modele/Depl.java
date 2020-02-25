@@ -1,5 +1,5 @@
 package Modele;
 
 public enum Depl {
-    HAUT,BAS,GAUCHE,DROIT
+    HAUT,BAS,GAUCHE,DROIT,AUCUN
 }
