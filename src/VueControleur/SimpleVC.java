@@ -16,10 +16,7 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 
 /**
  *
@@ -49,6 +46,7 @@ public class SimpleVC extends Application {
 
         Image imPM = new Image("Pacman.png"); // préparation des images
         Image imVide = new Image("Vide.png");
+        Image imFond = new Image("fondNoir.png");
         Image imBrique = new Image("Brique.jpg");
         Image imFantome = new Image("Fantome.jpg");
         //img.setScaleY(0.01);
@@ -77,7 +75,7 @@ public class SimpleVC extends Application {
                         if(grille.getObjStatic(i,j)== ObjStatic.MUR)
                             tab[i][j].setImage(imBrique);
                         else
-                            tab[i][j].setImage(imVide);
+                            tab[i][j].setImage(imFond);
                     }
                 }
                 Map<Entite,Point> map= grille.getMap();
@@ -97,12 +95,17 @@ public class SimpleVC extends Application {
         spm.addObserver(o);
         spm.start(); // on démarre spm
 
+        ArrayList<Fantome> fantomes = grille.getFantomes();
+        for(Fantome f : fantomes){
+            f.start();
+        }
+
         StackPane root = new StackPane();
         root.getChildren().add(grid);
 
         Scene scene = new Scene(root, 300, 250);
 
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Pacman !");
         primaryStage.setScene(scene);
         primaryStage.show();
 

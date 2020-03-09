@@ -1,6 +1,7 @@
 package Modele;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -10,7 +11,8 @@ public class Grille {
     private Map<Entite, Point> map;
     private int SIZE_X;
     private int SIZE_Y;
-
+    private final int PACMAN_DELAY=500;
+    private final int FANTOME_DELAY=1000;
 
     public Grille(int x,int y){
         SIZE_Y=y;
@@ -19,7 +21,7 @@ public class Grille {
         int n=4;
         Random r = new Random();
         for (int i=0;i<n;i++){
-            map.put(new Fantome(),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
+            map.put(new Fantome(this,FANTOME_DELAY),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
         }
 
         grilleObj=new ObjStatic[SIZE_X][SIZE_Y];
@@ -32,7 +34,7 @@ public class Grille {
             }
         }
 
-        SimplePacMan spm = new SimplePacMan(this,100);
+        SimplePacMan spm = new SimplePacMan(this,PACMAN_DELAY);
         map.put(spm,new Point(0,0));
     }
 
@@ -49,6 +51,14 @@ public class Grille {
             if (entite instanceof SimplePacMan) return (SimplePacMan)entite;
         }
         return null;
+    }
+
+    public ArrayList<Fantome> getFantomes(){
+        ArrayList<Fantome> tab = new ArrayList<>();
+        for(Entite entite : map.keySet()){
+            if(entite instanceof Fantome) tab.add((Fantome) entite);
+        }
+        return tab;
     }
 
     public Map<Entite, Point> getMap() {

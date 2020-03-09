@@ -71,7 +71,4 @@ public class SimplePacMan extends Entite {
     public void setDirection(Depl depl){
         this.direction=depl;
     }
-    public void setDelay(int d){
-        delay=d;
-    }
 }
