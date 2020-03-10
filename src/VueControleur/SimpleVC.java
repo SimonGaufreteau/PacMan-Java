@@ -47,6 +47,8 @@ public class SimpleVC extends Application {
         Image imFond = new Image("fondNoir.png");
         Image imBrique = new Image("Brique.jpg");
         Image imFantome = new Image("Fantome.jpg");
+        Image imPoint = new Image("point.png");
+        Image imBigPoint = new Image("Big-point.png");
         //img.setScaleY(0.01);
         //img.setScaleX(0.01);
 
@@ -72,8 +74,12 @@ public class SimpleVC extends Application {
                     for (int j = 0; j < SIZE_Y; j++) {
                         if(grille.getObjStatic(i,j)== ObjStatic.MUR)
                             tab[i][j].setImage(imBrique);
-                        else
+                        else{
                             tab[i][j].setImage(imFond);
+                            if(grille.getObjDynam(i,j)==ObjDynam.POINT) tab[i][j].setImage(imPoint);
+                            else if(grille.getObjDynam(i,j)==ObjDynam.BONUS) tab[i][j].setImage(imBigPoint);
+
+                        }
                     }
                 }
                 Map<Entite,Point> map= grille.getMap();

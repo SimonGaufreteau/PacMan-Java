@@ -19,7 +19,7 @@ public class SimplePacMan extends Entite {
     public SimplePacMan(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
-        direction=Depl.AUCUN;
+        direction=null;
     }
     @Override
     public void run() {

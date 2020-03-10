@@ -10,7 +10,7 @@ public class Fantome extends Entite {
     public Fantome(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
-        this.direction=Depl.AUCUN;
+        this.direction=null;
     }
 
     public void action() throws Exception {
@@ -18,7 +18,14 @@ public class Fantome extends Entite {
     }
 
     private void changeDirection() throws Exception {
-        changeDirectionRecur(direction);
+        if(direction==null) direction=Depl.getRandom();
+        Depl symetrical = direction.getSymetrical();
+        if(grille.OkDepl(symetrical,this)){
+            this.direction=symetrical;
+            grille.depl(symetrical,this);
+            setChanged();
+        }
+        else changeDirectionRecur(direction);
     }
 
     private void changeDirectionRecur(Depl depl) throws Exception{

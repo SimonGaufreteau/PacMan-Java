@@ -156,7 +156,7 @@ public class Grille {
 
     public boolean OkDepl(Depl depl,Entite e) throws Exception {
         Point p = map.get(e);
-        if(depl==null) throw new Exception("Invalid direction.");
+        if(depl==null) return false;
         if(p==null) throw new Exception("Invalid entity.");
         switch(depl){
             case HAUT:
