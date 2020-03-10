@@ -1,6 +1,7 @@
 package Modele;
 
 import java.awt.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,36 +9,94 @@ import java.util.Random;
 
 public class Grille {
     private ObjStatic[][] grilleObj;
+    private ObjDynam[][] grilleDynam;
     private Map<Entite, Point> map;
     private int SIZE_X;
     private int SIZE_Y;
-    private final int PACMAN_DELAY=500;
-    private final int FANTOME_DELAY=1000;
+    private Random r = new Random();
+    private final int PACMAN_DELAY=200;
+    private final int FANTOME_DELAY=200;
+    private final int FANTOME_NUMBER=1;
+
+    private final String FILE_REGEX=" \\| ";
+
+    public Grille(String filename) throws Exception {
+        FileReader fileReader = new FileReader(new File(filename));
+        BufferedReader br = new BufferedReader(fileReader);
+
+        String line = br.readLine();
+        String[] splitted = line.split(FILE_REGEX);
+        getSizeFromLine(splitted);
+
+        grilleObj = new ObjStatic[SIZE_X][SIZE_Y];
+        grilleDynam = new ObjDynam[SIZE_X][SIZE_Y];
+        line=br.readLine();
+        int i=0;
+        while(line!=null && i<SIZE_Y){
+            splitted=line.split(FILE_REGEX);
+            if(splitted.length!=SIZE_X) throw new Exception("Incorrect file format line : "+i+1+". Expected "+SIZE_X+" but found "+line.length());
+            for (int i1 = 0; i1 < splitted.length; i1++) {
+                String s = splitted[i1];
+                if (s.length() != 1) throw new Exception("Incorrect character at line "+i+1+" character n°"+i1+" :"+s);
+                char c = s.charAt(0);
+                grilleObj[i1][i] = ObjStatic.getObjFromChar(c);
+                grilleDynam[i1][i] = ObjDynam.getObjFromChar(c);
+            }
+            line=br.readLine();
+            i++;
+        }
+
+        map=new HashMap<>();
+        addGhosts();
+        SimplePacMan simplePacMan = new SimplePacMan(this,PACMAN_DELAY);
+        map.put(simplePacMan,new Point(1,1));
+    }
+
+    private void getSizeFromLine(String[] splitted) throws Exception {
+        if(splitted.length!=2) throw new Exception("Invalid first line in the file.");
+        try{
+            this.SIZE_X=Integer.parseInt(splitted[0]);
+            this.SIZE_Y=Integer.parseInt(splitted[1]);
+        }
+        catch (NumberFormatException e){
+            e.printStackTrace();
+            throw e;
+        }
+    }
+
 
     public Grille(int x,int y){
         SIZE_Y=y;
         SIZE_X=x;
         map = new HashMap<>();
-        int n=4;
-        Random r = new Random();
-        for (int i=0;i<n;i++){
-            map.put(new Fantome(this,FANTOME_DELAY),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
-        }
+        generateRandomObjStaticGrid();
+        addGhosts();
+    }
 
+
+    private void generateRandomObjStaticGrid(){
         grilleObj=new ObjStatic[SIZE_X][SIZE_Y];
+        grilleDynam= new ObjDynam[SIZE_X][SIZE_Y];
         for(int i=0;i<SIZE_X;i++){
             for (int j=0;j<SIZE_Y;j++){
                 if(i==0&&j==0) grilleObj[i][j]=ObjStatic.VIDE;
-                else if(r.nextInt(100)<80)
-                    grilleObj[i][j]=ObjStatic.VIDE;
+                else if(r.nextInt(100)<80) {
+                    grilleObj[i][j] = ObjStatic.VIDE;
+                    if(r.nextInt(100)<70)
+                        grilleDynam[i][j]=ObjDynam.POINT;
+                }
                 else grilleObj[i][j]=ObjStatic.MUR;
             }
         }
-
         SimplePacMan spm = new SimplePacMan(this,PACMAN_DELAY);
         map.put(spm,new Point(0,0));
     }
 
+    private void addGhosts(){
+        for (int i = 0; i< FANTOME_NUMBER; i++){
+            map.put(new Fantome(this,FANTOME_DELAY),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
+        }
+    }
 
     public Point getPacManCoord(){
         for (Entite entite : map.keySet()) {
@@ -126,5 +185,21 @@ public class Grille {
 
     public ObjStatic getObjStatic(int i, int j) {
         return grilleObj[i][j];
+    }
+
+    public ObjDynam[][] getGrilleDynam() {
+        return grilleDynam;
+    }
+
+    public ObjDynam getObjDynam(int i,int j){
+        return grilleDynam[i][j];
+    }
+
+    public int getSIZE_X() {
+        return SIZE_X;
+    }
+
+    public int getSIZE_Y() {
+        return SIZE_Y;
     }
 }

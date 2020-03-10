@@ -1,0 +1,10 @@
+W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W | W
+W | P | P | P | P | P | P | P | P | P | W | P | P | P | P | P | P | P | P | P | W
+W | P | W | W | W | P | W | W | W | P | W | P | W | W | W | P | W | W | W | P | W
+W | B | W | V | W | P | W | V | W | P | W | P | W | V | W | P | W | V | W | B | W
+W | P | W | W | W | P | W | W | W | P | W | P | W | W | W | P | W | W | W | P | W
+W | P | W | W | W | P | W | P | W | W | W | W | W | P | W | P | W | W | W | P | W
+W | P | W | W | W | P | W | P | W | W | W | W | W | P | W | P | W | W | W | P | W
+W | P | P | P | P | P | W | P | P | P | W | P | P | P | W | P | P | P | P | P | W
+W | W | W | W | W | P | W | W | W | V | W | V | W | W | W | P | W | W | W | W | W
+V | V | V | V | W | P | W | V | V | V | V | V | V | V | W | P | W | V | V | V | V

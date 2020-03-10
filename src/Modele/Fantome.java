@@ -6,20 +6,28 @@ import java.util.logging.Logger;
 
 public class Fantome extends Entite {
     private Random r = new Random();
-    private int delay;
 
     public Fantome(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
+        this.direction=Depl.AUCUN;
     }
 
-    @Override
     public void action() throws Exception {
-        int delta = r.nextInt(4);
-        Depl depl=Depl.values()[delta];
-        if(grille.OkDepl(depl,this))
+        changeDirection();
+    }
+
+    private void changeDirection() throws Exception {
+        changeDirectionRecur(direction);
+    }
+
+    private void changeDirectionRecur(Depl depl) throws Exception{
+        if(grille.OkDepl(depl,this)){
+            this.direction=depl;
             grille.depl(depl,this);
-        setChanged();
+            setChanged();
+        }
+        else changeDirectionRecur(Depl.getRandom());
     }
 
     @Override

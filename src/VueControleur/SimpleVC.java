@@ -16,7 +16,10 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
 import java.awt.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  *
@@ -24,21 +27,16 @@ import java.util.*;
  */
 public class SimpleVC extends Application {
 
-    public final int SIZE_X =10;
-    public final int SIZE_Y = 10;
+    public final int BLOCK_SIZE=19; //number of pixels for an image
+    public final String FILENAME="Stages/Stage1.txt";
 
     Grille grille;
-    /*public void updateMap(){
-        Iterator e = map.entrySet().iterator();
-        while (e.hasNext()){
-            e.next();
-        }
-    }*/
 
     @Override
-    public void start(Stage primaryStage) {
+    public void start(Stage primaryStage) throws Exception {
 
-        grille=new Grille(SIZE_X,SIZE_Y);
+        //grille=new Grille(SIZE_X,SIZE_Y);
+        grille=new Grille(FILENAME);
         GridPane grid = new GridPane(); // création de la grille
 
         // Pacman.svg.png
@@ -52,6 +50,8 @@ public class SimpleVC extends Application {
         //img.setScaleY(0.01);
         //img.setScaleX(0.01);
 
+        int SIZE_X=grille.getSIZE_X();
+        int SIZE_Y=grille.getSIZE_Y();
         ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y]; // tableau permettant de récupérer les cases graphiques lors du rafraichissement
 
         for (int i = 0; i < SIZE_X; i++) { // initialisation de la grille (sans image)
@@ -68,8 +68,6 @@ public class SimpleVC extends Application {
         Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
             @Override
             public void update(Observable o, Object arg) {
-                Point p = grille.getPacManCoord();
-                Random r = new Random();
                 for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
                     for (int j = 0; j < SIZE_Y; j++) {
                         if(grille.getObjStatic(i,j)== ObjStatic.MUR)
@@ -103,7 +101,7 @@ public class SimpleVC extends Application {
         StackPane root = new StackPane();
         root.getChildren().add(grid);
 
-        Scene scene = new Scene(root, 300, 250);
+        Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*BLOCK_SIZE);
 
         primaryStage.setTitle("Pacman !");
         primaryStage.setScene(scene);
