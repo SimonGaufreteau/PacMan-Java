@@ -5,25 +5,21 @@ import javafx.concurrent.Task;
 
 public class EndOfGameTask extends Task<Integer> {
 
-	private final static String ENDTEXT="finished";
-	private Grille grille;
+	private final static String VICTORY_TEXT="finished";
+	private Grille modelGrid;
 	public EndOfGameTask(Grille grille){
-		this.grille=grille;
+		this.modelGrid=grille;
 	}
 
 	@Override
-	protected Integer call() throws Exception {
-		while(grille.getNbBonusLeft()!=0){
+	protected Integer call(){
+		while(modelGrid.getNbBonusLeft()!=0){
 			if(isCancelled()) return 1;
 		}
+		modelGrid.interrupt();
+		updateMessage(VICTORY_TEXT);
 		updateProgress(1,1);
-		return 0;
-	}
 
-	@Override
-	protected void succeeded() {
-		super.succeeded();
-		updateMessage(ENDTEXT);
-		grille.interrupt();
+		return 0;
 	}
 }

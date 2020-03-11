@@ -14,14 +14,26 @@ public class Grille {
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
-    private final int PACMAN_DELAY=100;
-    private final int FANTOME_DELAY=100;
-    private final int FANTOME_NUMBER=1;
+    private final int PACMAN_DELAY=50;
+    private final int FANTOME_DELAY=50;
+    private final int FANTOME_NUMBER=6;
     private int nbBonusLeft;
+    private String FILENAME;
 
     private final String FILE_REGEX=" \\| ";
 
     public Grille(String filename) throws Exception {
+        reset(filename);
+    }
+
+    public void reset() throws Exception {
+        interrupt();
+        reset(FILENAME);
+    }
+
+    public void reset(String filename) throws Exception {
+        interrupt();
+        this.FILENAME=filename;
         FileReader fileReader = new FileReader(new File(filename));
         BufferedReader br = new BufferedReader(fileReader);
 
@@ -182,8 +194,14 @@ public class Grille {
         return false;
     }
 
+    public void startThreads(){
+        for(Entite e:map.keySet()){
+            e.start();
+        }
+    }
 
     public void interrupt(){
+        if(map==null) return;
         for(Entite e:map.keySet()){
             e.interrupt();
         }

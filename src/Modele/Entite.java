@@ -19,7 +19,7 @@ public abstract class Entite extends Observable implements Runnable {
         setChanged();
     }
 
-    protected void interrupt(){
+    public void interrupt(){
         running=false;
     }
 

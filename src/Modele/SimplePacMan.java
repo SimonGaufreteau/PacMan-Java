@@ -24,6 +24,7 @@ public class SimplePacMan extends Entite {
     @Override
     public void run() {
         running=true;
+        int i=0;
         while(running) { // spm descent dans la grille à chaque pas de temps
             try {
                 action(direction);
