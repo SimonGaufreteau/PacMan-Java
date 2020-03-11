@@ -2,7 +2,9 @@ package Controller;
 
 import Modele.Entite;
 import Modele.Grille;
-import Tasks.EndOfGameTask;
+import TasksThreads.DisplayThread;
+import TasksThreads.EndOfGameTask;
+import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
@@ -11,19 +13,18 @@ public class ThreadController {
 	private ArrayList<Thread> threads;
 	private ArrayList<Entite> entites;
 
-	public ThreadController(Grille modelGrid){
-		resetEndOfGameTask(modelGrid);
+	public ThreadController(Grille modelGrid, ImageView[][] tab){
+		resetEndOfGameTask(tab,modelGrid);
 	}
 
 	public void startThreads(){
 		//Starting the end condition for the game.
-		for(Entite e:entites){
-			e.start();
-		}
 		for(Thread thread:threads){
 			thread.start();
 		}
-
+		for(Entite e:entites){
+			e.start();
+		}
 	}
 
 	public void interruptThreads(){
@@ -35,11 +36,12 @@ public class ThreadController {
 		}
 	}
 
-	public void resetEndOfGameTask(Grille modelGrid)  {
+	public void resetEndOfGameTask(ImageView[][] tab,Grille modelGrid)  {
 		threads=new ArrayList<>();
 		endOfGameTask = new EndOfGameTask(modelGrid);
 		threads.add(new Thread(endOfGameTask));
-
+		DisplayThread displayThread=new DisplayThread(tab,modelGrid);
+		threads.add(displayThread);
 
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());

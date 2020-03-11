@@ -1,21 +1,13 @@
 package Vue;
 
 import Controller.EventController;
-import Controller.ObserverController;
 import Controller.ThreadController;
-import Modele.Depl;
 import Modele.Grille;
-import Modele.SimplePacMan;
-import Tasks.EndOfGameTask;
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -58,8 +50,7 @@ public class MainVue extends Application {
 		stage.setScene(scene);
 
 		//Setting and starting the threads
-		ObserverController.init(tab,modelGrid);
-		ThreadController threadController = new ThreadController(modelGrid);
+		ThreadController threadController = new ThreadController(modelGrid,tab);
 		threadController.startThreads();
 
 		//Generating event handler
