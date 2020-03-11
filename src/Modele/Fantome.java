@@ -23,7 +23,6 @@ public class Fantome extends Entite {
         if(grille.OkDepl(symetrical,this)){
             this.direction=symetrical;
             grille.depl(symetrical,this);
-            setChanged();
         }
         else changeDirectionRecur(direction);
     }
@@ -32,7 +31,6 @@ public class Fantome extends Entite {
         if(grille.OkDepl(depl,this)){
             this.direction=depl;
             grille.depl(depl,this);
-            setChanged();
         }
         else changeDirectionRecur(Depl.getRandom());
     }
@@ -52,7 +50,6 @@ public class Fantome extends Entite {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            notifyObservers(); // notification de l'observer
             try {
                 Thread.sleep(delay); // pause
             } catch (InterruptedException ex) {

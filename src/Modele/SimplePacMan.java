@@ -24,14 +24,12 @@ public class SimplePacMan extends Entite {
     @Override
     public void run() {
         running=true;
-        int i=0;
         while(running) { // spm descent dans la grille à chaque pas de temps
             try {
                 action(direction);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            notifyObservers(); // notification de l'observer
             try {
                 Thread.sleep(delay); // pause
             } catch (InterruptedException ex) {
@@ -45,7 +43,6 @@ public class SimplePacMan extends Entite {
     public void action(Depl direction) throws Exception {
         if(grille.OkDepl(direction,this))
             grille.depl(direction,this);
-        setChanged();
     }
 
 
