@@ -1,4 +1,4 @@
-package Tasks;
+package TasksThreads;
 
 import Modele.Grille;
 import javafx.concurrent.Task;
