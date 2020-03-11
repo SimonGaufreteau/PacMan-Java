@@ -9,6 +9,7 @@ public abstract class Entite extends Observable implements Runnable {
     protected int delay;
     protected Depl direction;
     protected Random r=new Random();
+    protected boolean running=false;
 
     protected void randomAction() throws Exception {
         int delta = r.nextInt(4);
@@ -18,6 +19,9 @@ public abstract class Entite extends Observable implements Runnable {
         setChanged();
     }
 
+    protected void interrupt(){
+        running=false;
+    }
 
 
 

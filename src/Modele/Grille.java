@@ -14,9 +14,10 @@ public class Grille {
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
-    private final int PACMAN_DELAY=200;
-    private final int FANTOME_DELAY=200;
+    private final int PACMAN_DELAY=100;
+    private final int FANTOME_DELAY=100;
     private final int FANTOME_NUMBER=1;
+    private int nbBonusLeft;
 
     private final String FILE_REGEX=" \\| ";
 
@@ -41,6 +42,7 @@ public class Grille {
                 char c = s.charAt(0);
                 grilleObj[i1][i] = ObjStatic.getObjFromChar(c);
                 grilleDynam[i1][i] = ObjDynam.getObjFromChar(c);
+                if(grilleDynam[i1][i]!=null)nbBonusLeft++;
             }
             line=br.readLine();
             i++;
@@ -152,7 +154,12 @@ public class Grille {
                 else p.x--;
                 break;
         }
+        if((getObjDynam(p.x,p.y)==ObjDynam.BONUS || getObjDynam(p.x,p.y)==ObjDynam.POINT )&& e instanceof SimplePacMan) {
+            grilleDynam[p.x][p.y]=null;
+            nbBonusLeft--;
+        }
     }
+
 
     public boolean OkDepl(Depl depl,Entite e) throws Exception {
         Point p = map.get(e);
@@ -175,6 +182,13 @@ public class Grille {
         return false;
     }
 
+
+    public void interrupt(){
+        for(Entite e:map.keySet()){
+            e.interrupt();
+        }
+    }
+
     private boolean isVide(int x, int y){
         return getObjStatic(x,y) == ObjStatic.VIDE;
     }
@@ -187,12 +201,12 @@ public class Grille {
         return grilleObj[i][j];
     }
 
-    public ObjDynam[][] getGrilleDynam() {
-        return grilleDynam;
-    }
-
     public ObjDynam getObjDynam(int i,int j){
         return grilleDynam[i][j];
+    }
+
+    public int getNbBonusLeft() {
+        return nbBonusLeft;
     }
 
     public int getSIZE_X() {
@@ -201,5 +215,13 @@ public class Grille {
 
     public int getSIZE_Y() {
         return SIZE_Y;
+    }
+
+    public int getPACMAN_DELAY() {
+        return PACMAN_DELAY;
+    }
+
+    public int getFANTOME_DELAY() {
+        return FANTOME_DELAY;
     }
 }

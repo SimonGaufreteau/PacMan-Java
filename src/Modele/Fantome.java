@@ -45,7 +45,8 @@ public class Fantome extends Entite {
 
     @Override
     public void run() {
-        while(true){
+        running=true;
+        while(running){
             try {
                 action();
             } catch (Exception e) {

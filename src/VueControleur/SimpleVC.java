@@ -1,11 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package VueControleur;
 
 import Modele.*;
+import Tasks.EndOfGameTask;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
@@ -13,6 +10,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -28,19 +26,15 @@ import java.util.Observer;
 public class SimpleVC extends Application {
 
     public final int BLOCK_SIZE=19; //number of pixels for an image
-    public final String FILENAME="Stages/Stage1.txt";
+    public final String FILENAME="Stages/StageTest.txt";
 
     Grille grille;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        //grille=new Grille(SIZE_X,SIZE_Y);
         grille=new Grille(FILENAME);
         GridPane grid = new GridPane(); // création de la grille
 
-        // Pacman.svg.png
-        //Image image = new Image(getClass().getResource("za.jpg").toExternalForm());
 
         Image imPM = new Image("Pacman.png"); // préparation des images
         Image imVide = new Image("Vide.png");
@@ -49,8 +43,6 @@ public class SimpleVC extends Application {
         Image imFantome = new Image("Fantome.jpg");
         Image imPoint = new Image("point.png");
         Image imBigPoint = new Image("Big-point.png");
-        //img.setScaleY(0.01);
-        //img.setScaleX(0.01);
 
         int SIZE_X=grille.getSIZE_X();
         int SIZE_Y=grille.getSIZE_Y();
@@ -59,50 +51,12 @@ public class SimpleVC extends Application {
         for (int i = 0; i < SIZE_X; i++) { // initialisation de la grille (sans image)
             for (int j = 0; j < SIZE_Y; j++) {
                 ImageView img = new ImageView();
-
                 tab[i][j] = img;
-
                 grid.add(img, i, j);
             }
 
         }
 
-        Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
-            @Override
-            public void update(Observable o, Object arg) {
-                for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
-                    for (int j = 0; j < SIZE_Y; j++) {
-                        if(grille.getObjStatic(i,j)== ObjStatic.MUR)
-                            tab[i][j].setImage(imBrique);
-                        else{
-                            tab[i][j].setImage(imFond);
-                            if(grille.getObjDynam(i,j)==ObjDynam.POINT) tab[i][j].setImage(imPoint);
-                            else if(grille.getObjDynam(i,j)==ObjDynam.BONUS) tab[i][j].setImage(imBigPoint);
-
-                        }
-                    }
-                }
-                Map<Entite,Point> map= grille.getMap();
-                for(Entite e : map.keySet()){
-                    Point point=map.get(e);
-                    if(e instanceof SimplePacMan)
-                        tab[point.x][point.y].setImage(imPM);
-                    else if (e instanceof Fantome)
-                        tab[point.x][point.y].setImage(imFantome);
-                }
-            }
-        };
-
-
-        SimplePacMan spm = grille.getPacMan();
-
-        spm.addObserver(o);
-        spm.start(); // on démarre spm
-
-        ArrayList<Fantome> fantomes = grille.getFantomes();
-        for(Fantome f : fantomes){
-            f.start();
-        }
 
         StackPane root = new StackPane();
         root.getChildren().add(grid);
@@ -111,6 +65,54 @@ public class SimpleVC extends Application {
 
         primaryStage.setTitle("Pacman !");
         primaryStage.setScene(scene);
+
+        Observer o =  new Observer() { // l'observer observe l'obervable (update est exécuté dès notifyObservers() est appelé côté modèle )
+            @Override
+            public void update(Observable o, Object arg) {
+                if(o instanceof Entite){
+                    for (int i = 0; i < SIZE_X; i++) { // rafraichissement graphique
+                        for (int j = 0; j < SIZE_Y; j++) {
+                            if(grille.getObjStatic(i,j)== ObjStatic.MUR)
+                                tab[i][j].setImage(imBrique);
+                            else{
+                                tab[i][j].setImage(imFond);
+                                if(grille.getObjDynam(i,j)==ObjDynam.POINT) tab[i][j].setImage(imPoint);
+                                else if(grille.getObjDynam(i,j)==ObjDynam.BONUS) tab[i][j].setImage(imBigPoint);
+
+                            }
+                        }
+                    }
+                    Map<Entite,Point> map= grille.getMap();
+                    for(Entite e : map.keySet()){
+                        Point point=map.get(e);
+                        if(e instanceof SimplePacMan)
+                            tab[point.x][point.y].setImage(imPM);
+                        else if (e instanceof Fantome)
+                            tab[point.x][point.y].setImage(imFantome);
+                    }
+                }
+            }
+
+        };
+        SimplePacMan spm = grille.getPacMan();
+
+        spm.addObserver(o);
+        spm.start(); // on démarre spm
+
+        EndOfGameTask endOfGameTask=new EndOfGameTask(grille);
+        new Thread(endOfGameTask).start();
+        Text text = new Text();
+        text.setX(300);
+        text.setY(300);
+        text.textProperty().bind(endOfGameTask.messageProperty());
+        root.getChildren().add(text);
+
+        ArrayList<Fantome> fantomes = grille.getFantomes();
+        for(Fantome f : fantomes){
+            f.start();
+        }
+
+
         primaryStage.show();
 
         root.setOnKeyPressed(new EventHandler<javafx.scene.input.KeyEvent>() { // on écoute le clavier
@@ -143,10 +145,10 @@ public class SimpleVC extends Application {
         });
 
         grid.requestFocus();
-
-
-
     }
+
+
+
 
     /**
      * @param args the command line arguments
