@@ -9,10 +9,6 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author fred
- */
 public class SimplePacMan extends Entite {
     Random r = new Random();
 

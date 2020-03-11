@@ -1,6 +1,5 @@
 package TasksThreads;
 
-import Exceptions.AlreadyInitException;
 import Modele.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,8 +12,16 @@ public class DisplayThread extends Thread{
 	private  ImageView[][] tab;
 	private  Grille modelGrid;
 	private AtomicBoolean running=new AtomicBoolean(false);
-	public static final int REFRESH_DELAY=50;
+	public static final int REFRESH_DELAY=5;
 	private boolean firstInstance=true;
+	Image imPM = new Image("Pacman.png");
+	Image imVide = new Image("Vide.png");
+	Image imFond = new Image("fondNoir.png");
+	Image imBrique = new Image("Brique.jpg");
+	Image imFantome = new Image("Fantome.jpg");
+	Image imPoint = new Image("point.png");
+	Image imBigPoint = new Image("Big-point.png");
+
 	//Use init if you want a safe init of the Observer, user reset if you want to reset the grid / tab;
 	public DisplayThread(ImageView[][] tab, Grille modelGrid){
 		if(modelGrid==null) throw new NullPointerException();
@@ -27,13 +34,7 @@ public class DisplayThread extends Thread{
 		running.set(true);
 		int SIZE_X = modelGrid.getSIZE_X();
 		int SIZE_Y = modelGrid.getSIZE_Y();
-		Image imPM = new Image("Pacman.png");
-		Image imVide = new Image("Vide.png");
-		Image imFond = new Image("fondNoir.png");
-		Image imBrique = new Image("Brique.jpg");
-		Image imFantome = new Image("Fantome.jpg");
-		Image imPoint = new Image("point.png");
-		Image imBigPoint = new Image("Big-point.png");
+
 
 
 		while(running.get()){
