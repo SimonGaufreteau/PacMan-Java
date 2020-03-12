@@ -41,7 +41,7 @@ public class ThreadController {
 		endOfGameTask = new EndOfGameTask(modelGrid);
 		threads.add(new Thread(endOfGameTask));
 		DisplayThread displayThread=new DisplayThread(tab,modelGrid);
-		threads.add(displayThread);
+		threads.add(new Thread(displayThread));
 
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
