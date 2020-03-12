@@ -164,6 +164,7 @@ public class Grille {
 
     public void depl(Depl d,Entite e) throws Exception {
         Point p = map.get(e);
+        if(d==null) return;
         if(p==null) throw new Exception("Invalid entity.");
         switch (d){
             case HAUT:

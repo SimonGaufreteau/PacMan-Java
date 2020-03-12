@@ -11,18 +11,18 @@ public class EventController {
 	}
 
 	public void moveLeft(){
-		spm.setDirection(Depl.GAUCHE);
+		spm.setCachedDirection(Depl.GAUCHE);
 	}
 
 	public void moveRight(){
-		spm.setDirection(Depl.DROIT);
+		spm.setCachedDirection(Depl.DROIT);
 	}
 
 	public void moveUp(){
-		spm.setDirection(Depl.HAUT);
+		spm.setCachedDirection(Depl.HAUT);
 	}
 
 	public void moveDown(){
-		spm.setDirection(Depl.BAS);
+		spm.setCachedDirection(Depl.BAS);
 	}
 }

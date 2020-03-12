@@ -11,18 +11,20 @@ import java.util.logging.Logger;
 
 public class SimplePacMan extends Entite {
     Random r = new Random();
+    private Depl cachedDirection;
 
     public SimplePacMan(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
         direction=null;
+        cachedDirection=null;
     }
     @Override
     public void run() {
         running=true;
         while(running) { // spm descent dans la grille à chaque pas de temps
             try {
-                action(direction);
+                action();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -36,9 +38,17 @@ public class SimplePacMan extends Entite {
 
     }
 
-    public void action(Depl direction) throws Exception {
-        if(grille.OkDepl(direction,this))
+    public void action() throws Exception {
+        if(grille.OkDepl(cachedDirection,this)){
+            this.direction=cachedDirection;
+            this.cachedDirection=null;
             grille.depl(direction,this);
+        }
+        else if(grille.OkDepl(direction,this))
+            grille.depl(direction,this);
+        else{//Impossible to go in any direction
+            this.direction=null;
+        }
     }
 
 
@@ -49,5 +59,9 @@ public class SimplePacMan extends Entite {
 
     public void setDirection(Depl depl){
         this.direction=depl;
+    }
+
+    public void setCachedDirection(Depl cachedDirection) {
+        this.cachedDirection = cachedDirection;
     }
 }
