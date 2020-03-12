@@ -1,8 +1,9 @@
 package Modele;
 
 import java.awt.*;
-import java.io.*;
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -85,7 +86,7 @@ public class Grille {
     }
 
 
-    public Grille(int x,int y){
+    /*public Grille(int x,int y){
         SIZE_Y=y;
         SIZE_X=x;
         map = new HashMap<>();
@@ -110,7 +111,7 @@ public class Grille {
         }
         SimplePacMan spm = new SimplePacMan(this,PACMAN_DELAY);
         map.put(spm,new Point(0,0));
-    }
+    }*/
 
     private void addGhosts(){
         for (int i = 0; i< FANTOME_NUMBER; i++){
@@ -132,13 +133,6 @@ public class Grille {
         map.put(new Fantome(this,FANTOME_DELAY),new Point(x,y));
     }
 
-    public Point getPacManCoord(){
-        for (Entite entite : map.keySet()) {
-            if (entite instanceof SimplePacMan) return map.get(entite);
-        }
-        return null;
-    }
-
     public SimplePacMan getPacMan(){
         for (Entite entite : map.keySet()) {
             if (entite instanceof SimplePacMan) return (SimplePacMan)entite;
@@ -146,20 +140,8 @@ public class Grille {
         return null;
     }
 
-    public ArrayList<Fantome> getFantomes(){
-        ArrayList<Fantome> tab = new ArrayList<>();
-        for(Entite entite : map.keySet()){
-            if(entite instanceof Fantome) tab.add((Fantome) entite);
-        }
-        return tab;
-    }
-
     public Map<Entite, Point> getMap() {
         return map;
-    }
-
-    public ObjStatic[][] getGrille() {
-        return grilleObj;
     }
 
     public void depl(Depl d,Entite e) throws Exception {
@@ -215,12 +197,6 @@ public class Grille {
         return false;
     }
 
-    public void startThreads(){
-        for(Entite e:map.keySet()){
-            e.start();
-        }
-    }
-
     public void interrupt(){
         if(map==null) return;
         for(Entite e:map.keySet()){
@@ -230,10 +206,6 @@ public class Grille {
 
     private boolean isVide(int x, int y){
         return getObjStatic(x,y) == ObjStatic.VIDE;
-    }
-
-    public void setPointEntite(Entite e,int x,int y){
-        map.put(e,new Point(x,y));
     }
 
     public ObjStatic getObjStatic(int i, int j) {
@@ -254,13 +226,5 @@ public class Grille {
 
     public int getSIZE_Y() {
         return SIZE_Y;
-    }
-
-    public int getPACMAN_DELAY() {
-        return PACMAN_DELAY;
-    }
-
-    public int getFANTOME_DELAY() {
-        return FANTOME_DELAY;
     }
 }
