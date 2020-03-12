@@ -1,5 +1,6 @@
 package TasksThreads;
 
+import Controller.ThreadController;
 import Modele.Grille;
 import javafx.concurrent.Task;
 
@@ -7,7 +8,9 @@ public class EndOfGameTask extends Task<Integer> {
 
 	private final static String VICTORY_TEXT="finished";
 	private Grille modelGrid;
-	public EndOfGameTask(Grille grille){
+	private ThreadController controller;
+	public EndOfGameTask(Grille grille, ThreadController threadController){
+		controller=threadController;
 		this.modelGrid=grille;
 	}
 
@@ -16,7 +19,7 @@ public class EndOfGameTask extends Task<Integer> {
 		while(modelGrid.getNbBonusLeft()!=0){
 			if(isCancelled()) return 1;
 		}
-		modelGrid.interrupt();
+		controller.stopGame();
 		updateMessage(VICTORY_TEXT);
 		updateProgress(1,1);
 

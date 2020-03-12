@@ -16,7 +16,7 @@ public class Grille {
     private int SIZE_Y;
     private Random r = new Random();
     private final int PACMAN_DELAY=50;
-    private final int FANTOME_DELAY=50;
+    private final int FANTOME_DELAY=100;
     private final int FANTOME_NUMBER=6;
 
     private final int GHOST_XPOS=12;
@@ -40,6 +40,7 @@ public class Grille {
 
     public void reset(String filename) throws Exception {
         interrupt();
+        this.nbBonusLeft=0;
         this.FILENAME=filename;
         FileReader fileReader = new FileReader(new File(filename));
         BufferedReader br = new BufferedReader(fileReader);

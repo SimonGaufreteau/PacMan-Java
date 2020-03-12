@@ -5,9 +5,11 @@ import Controller.ThreadController;
 import Modele.Grille;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -55,55 +57,36 @@ public class MainVue extends Application {
 
 		//Generating event handler
 		EventController eventController = new EventController(modelGrid);
-		root.setOnKeyPressed(event -> {
-			try {
-				/*
-				* Note : this is a bit useless for now because nothing else than setDirection is done in the class
-				* but to keep the MVC pattern clean and for future updates, we keep this design (for now).
-				*/
-				switch (event.getCode()){
-					case LEFT:
-						eventController.moveLeft();
-						break;
-					case RIGHT:
-						eventController.moveRight();
-						break;
-					case UP:
-						eventController.moveUp();
-						break;
-					case DOWN:
-						eventController.moveDown();
-						break;
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
+		eventController.setBindings(root);
 
-		/*Text text = new Text();
-		text.setX(300);
-		text.setY(300);
-		text.textProperty().bind(threadController.getEndOfGameTask().messageProperty());
-		root.getChildren().add(text);*/
 
-		/*Button button = new Button("Retry ?");
+		//Adding a retry button
+		Button button = new Button("Retry ?");
 		button.setOnAction(actionEvent -> {
 			try {
-				modelGrid.reset();
-				threadController.resetEndOfGameTask(modelGrid);
-				ObserverController.reset(tab,modelGrid);
+				threadController.interruptThreads();
+				grid.requestFocus();
+
+				threadController.resetGrid();
+
+				eventController.reset(modelGrid);
+
+				threadController.resetThreads(tab,modelGrid);
+				threadController.startThreads();
+
 			}
 			catch (Exception e) {
 				e.printStackTrace();
 			}
 
 		});
-		root.getChildren().add(button);*/
+		root.getChildren().add(button);
 
 
 		stage.show();
 		grid.requestFocus();
 	}
+
 
 	public static void main(String[] args) {
 		launch(args);

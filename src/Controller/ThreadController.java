@@ -12,9 +12,10 @@ public class ThreadController {
 	private EndOfGameTask endOfGameTask;
 	private ArrayList<Thread> threads;
 	private ArrayList<Entite> entites;
+	private Grille modelGrid;
 
 	public ThreadController(Grille modelGrid, ImageView[][] tab){
-		resetEndOfGameTask(tab,modelGrid);
+		resetThreads(tab,modelGrid);
 	}
 
 	public void startThreads(){
@@ -36,20 +37,30 @@ public class ThreadController {
 		}
 	}
 
-	public void resetEndOfGameTask(ImageView[][] tab,Grille modelGrid)  {
+	public void resetThreads(ImageView[][] tab,Grille modelGrid)  {
+		this.modelGrid=modelGrid;
 		threads=new ArrayList<>();
-		endOfGameTask = new EndOfGameTask(modelGrid);
+		endOfGameTask = new EndOfGameTask(modelGrid,this);
 		threads.add(new Thread(endOfGameTask));
 		DisplayThread displayThread=new DisplayThread(tab,modelGrid);
 		threads.add(new Thread(displayThread));
-
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
+	}
+
+	public void stopGame(){
+		modelGrid.interrupt();
 	}
 
 	public EndOfGameTask getEndOfGameTask() {
 		return endOfGameTask;
 	}
 
-
+	public void resetGrid(){
+		try {
+			modelGrid.reset();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 }

@@ -68,13 +68,15 @@ public class DisplayThread extends Task<Void> {
 			try {
 				Thread.sleep(REFRESH_DELAY);
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				System.out.println("Thread stopped.");
+				return null;
 			}
 		}
 		return null;
 	}
 
-	public void interrupt(){
+
+	public void stopThread(){
 		running.set(false);
 	}
 
