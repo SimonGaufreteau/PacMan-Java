@@ -17,6 +17,12 @@ public class Grille {
     private final int PACMAN_DELAY=50;
     private final int FANTOME_DELAY=50;
     private final int FANTOME_NUMBER=6;
+
+    private final int GHOST_XPOS=12;
+    private final int GHOST_YPOS=12;
+    private final int PCM_XPOS=1;
+    private final int PCM_YPOS=1;
+
     private int nbBonusLeft;
     private String FILENAME;
 
@@ -61,9 +67,9 @@ public class Grille {
         }
 
         map=new HashMap<>();
-        addGhosts();
+        addGhosts(GHOST_XPOS,GHOST_YPOS);
         SimplePacMan simplePacMan = new SimplePacMan(this,PACMAN_DELAY);
-        map.put(simplePacMan,new Point(1,1));
+        map.put(simplePacMan,new Point(PCM_XPOS,PCM_YPOS));
     }
 
     private void getSizeFromLine(String[] splitted) throws Exception {
@@ -108,8 +114,22 @@ public class Grille {
 
     private void addGhosts(){
         for (int i = 0; i< FANTOME_NUMBER; i++){
-            map.put(new Fantome(this,FANTOME_DELAY),new Point(r.nextInt(SIZE_X),r.nextInt(SIZE_Y)));
+            addOneGhost();
         }
+    }
+
+    private void addGhosts(int x,int y){
+        for(int i=0;i<FANTOME_NUMBER;i++){
+            addOneGhost(x,y);
+        }
+    }
+
+    private void addOneGhost(){
+        addOneGhost(r.nextInt(SIZE_X),r.nextInt(SIZE_Y));
+    }
+
+    private void addOneGhost(int x,int y){
+        map.put(new Fantome(this,FANTOME_DELAY),new Point(x,y));
     }
 
     public Point getPacManCoord(){
