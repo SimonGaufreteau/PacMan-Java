@@ -228,4 +228,8 @@ public class Grille {
     public int getSIZE_Y() {
         return SIZE_Y;
     }
+
+    public void setNbBonusLeft(int nbBonusLeft) {
+        this.nbBonusLeft = nbBonusLeft;
+    }
 }

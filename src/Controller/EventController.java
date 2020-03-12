@@ -4,6 +4,9 @@ import Modele.Depl;
 import Modele.Grille;
 import Modele.SimplePacMan;
 import javafx.scene.Node;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
+
 public class EventController {
 	private SimplePacMan spm;
 	
@@ -16,7 +19,7 @@ public class EventController {
 		spm=modelGrid.getPacMan();
 	}
 
-	public void setBindings(Node root){
+	public void setBindings(BorderPane root){
 		root.setOnKeyPressed(event -> {
 			try {
 				/*
@@ -26,6 +29,7 @@ public class EventController {
 				switch (event.getCode()){
 					case LEFT:
 						moveLeft();
+
 						break;
 					case RIGHT:
 						moveRight();
@@ -36,6 +40,8 @@ public class EventController {
 					case DOWN:
 						moveDown();
 						break;
+					default:
+						root.getCenter().requestFocus();
 				}
 			} catch (Exception e) {
 				e.printStackTrace();

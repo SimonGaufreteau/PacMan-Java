@@ -1,14 +1,20 @@
 package Vue;
 
+import Controller.BindingController;
 import Controller.EventController;
 import Controller.ThreadController;
 import Modele.Grille;
+import TasksThreads.EndOfGameTask;
 import javafx.application.Application;
+import javafx.beans.binding.Binding;
+import javafx.concurrent.Task;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -41,10 +47,10 @@ public class MainVue extends Application {
 		}
 
 		//Root node for javafx
-		StackPane root = new StackPane();
+		BorderPane root = new BorderPane();
 
 		//Adding elements to the root
-		root.getChildren().add(grid);
+		root.setCenter(grid);
 		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*BLOCK_SIZE);
 
 		//Setting the scene
@@ -59,20 +65,26 @@ public class MainVue extends Application {
 		EventController eventController = new EventController(modelGrid);
 		eventController.setBindings(root);
 
+		//Adding a text to display on the win condition (binding)
+		Text text=new Text();
+		text.setFont(new Font(50));
+		BindingController.bindText(text,threadController.getEndOfGameTask(),root);
+
 
 		//Adding a retry button
 		Button button = new Button("Retry ?");
 		button.setOnAction(actionEvent -> {
 			try {
 				threadController.interruptThreads();
-				grid.requestFocus();
-
 				threadController.resetGrid();
 
+				grid.requestFocus();
 				eventController.reset(modelGrid);
 
 				threadController.resetThreads(tab,modelGrid);
+				BindingController.bindText(text,threadController.getEndOfGameTask(),root);
 				threadController.startThreads();
+
 
 			}
 			catch (Exception e) {
@@ -80,9 +92,23 @@ public class MainVue extends Application {
 			}
 
 		});
-		root.getChildren().add(button);
+
+		Button endGame = new Button("Engame ?");
+		endGame.setOnAction(actionEvent -> {
+			try{
+				modelGrid.setNbBonusLeft(0);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+		});
 
 
+		root.setRight(endGame);
+		root.setLeft(button);
+
+
+		//Showing the stage with the grid on the focus
 		stage.show();
 		grid.requestFocus();
 	}
