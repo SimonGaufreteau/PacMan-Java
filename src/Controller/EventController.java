@@ -3,19 +3,24 @@ package Controller;
 import Modele.Depl;
 import Modele.Grille;
 import Modele.SimplePacMan;
-import javafx.scene.Node;
+import javafx.event.ActionEvent;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 
 public class EventController {
 	private SimplePacMan spm;
-	
-	public EventController(Grille modelGrid) {
-		this.spm=modelGrid.getPacMan();
+	private Grille modelGrid;
+	private ImageView[][] tab;
+	private ThreadController threadController;
 
+	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab) {
+		this.spm=modelGrid.getPacMan();
+		this.threadController=threadController;
+		this.modelGrid=modelGrid;
+		this.tab=tab;
 	}
 
-	public void reset(Grille modelGrid){
+	private void reset(){
 		spm=modelGrid.getPacMan();
 	}
 
@@ -65,4 +70,12 @@ public class EventController {
 		spm.setCachedDirection(Depl.BAS);
 	}
 
+
+	public void handleRestart(ActionEvent actionEvent) {
+			threadController.interruptThreads();
+			threadController.resetGrid();
+			reset();
+			threadController.resetThreads(tab,modelGrid);
+			threadController.startThreads();
+	}
 }
