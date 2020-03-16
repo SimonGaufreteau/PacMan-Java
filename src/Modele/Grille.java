@@ -15,8 +15,8 @@ public class Grille {
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
-    private final int PACMAN_DELAY=50;
-    private final int FANTOME_DELAY=100;
+    private final int PACMAN_DELAY=200;
+    private final int FANTOME_DELAY=200;
     private final int FANTOME_NUMBER=6;
 
     private final int GHOST_XPOS=12;

@@ -1,21 +1,14 @@
 package Vue;
 
-import Controller.BindingController;
 import Controller.EventController;
 import Controller.ThreadController;
 import Modele.Grille;
-import TasksThreads.EndOfGameTask;
 import javafx.application.Application;
-import javafx.beans.binding.Binding;
-import javafx.concurrent.Task;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -24,17 +17,36 @@ public class MainVue extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
+
+		//Root node for javafx
+		/*BorderPane root = new BorderPane();*/
+		FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("main.fxml"));
+
+
 		//Init modelGrid (read-only here --> MVC)
 		Grille modelGrid=new Grille(FILENAME);
-
 		int SIZE_X=modelGrid.getSIZE_X();
 		int SIZE_Y=modelGrid.getSIZE_Y();
 
 		//Initialising an ImageView tab which will contains grid images.
 		ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y];
 
+		ThreadController threadController = new ThreadController(modelGrid,tab);
+
+		//Generating event handler
+		EventController eventController = new EventController(modelGrid,threadController,tab);
+		fxmlloader.setController(eventController);
+
+		//Setting the binds
+		BorderPane root = fxmlloader.load();
+		eventController.setBindings(root);
+
+
+
+
+
 		//Initialising the GridPane containing the actual images
-		GridPane grid = new GridPane();
+		GridPane grid = (GridPane) root.getCenter();
 
 
 		//Init with empty images
@@ -46,11 +58,10 @@ public class MainVue extends Application {
 			}
 		}
 
-		//Root node for javafx
-		BorderPane root = new BorderPane();
+
 
 		//Adding elements to the root
-		root.setCenter(grid);
+		//root.setCenter(grid);
 		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*BLOCK_SIZE);
 
 		//Setting the scene
@@ -58,21 +69,19 @@ public class MainVue extends Application {
 		stage.setScene(scene);
 
 		//Setting and starting the threads
-		ThreadController threadController = new ThreadController(modelGrid,tab);
 		threadController.startThreads();
 
-		//Generating event handler
-		EventController eventController = new EventController(modelGrid);
-		eventController.setBindings(root);
+
+
 
 		//Adding a text to display on the win condition (binding)
-		Text text=new Text();
+		/*Text text=new Text();
 		text.setFont(new Font(50));
-		BindingController.bindText(text,threadController.getEndOfGameTask(),root);
+		BindingController.bindText(text,threadController.getEndOfGameTask(),root);*/
 
 
 		//Adding a retry button
-		Button button = new Button("Retry ?");
+		/*Button button = new Button("Retry ?");
 		button.setOnAction(actionEvent -> {
 			try {
 				threadController.interruptThreads();
@@ -105,7 +114,7 @@ public class MainVue extends Application {
 
 
 		root.setRight(endGame);
-		root.setLeft(button);
+		root.setLeft(button);*/
 
 
 		//Showing the stage with the grid on the focus
