@@ -5,6 +5,11 @@
  */
 package Modele;
 
+import javafx.beans.InvalidationListener;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableStringValue;
+import javafx.beans.value.ObservableValue;
+
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -110,5 +115,9 @@ public class SimplePacMan extends Entite {
 
     public boolean isUntouchable() {
         return untouchable;
+    }
+
+    public int getLives(){
+        return lives;
     }
 }

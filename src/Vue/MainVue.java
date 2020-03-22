@@ -3,12 +3,14 @@ package Vue;
 import Controller.EventController;
 import Controller.ThreadController;
 import Modele.Grille;
+import TasksThreads.LivesTask;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -40,7 +42,13 @@ public class MainVue extends Application {
 		BorderPane root = fxmlloader.load();
 		eventController.setBindings(root);
 
-		stage.setResizable(false);
+		//binding the bottom text to the number of lives left
+		Text text= (Text) root.getBottom();
+		LivesTask livesTask = new LivesTask(modelGrid.getPacMan());
+		text.textProperty().bind(livesTask.messageProperty());
+		new Thread(livesTask).start();
+		root.setBottom(text);
+		stage.setResizable(true);
 
 		//Initialising the GridPane containing the actual images
 		GridPane grid = (GridPane) root.getCenter();

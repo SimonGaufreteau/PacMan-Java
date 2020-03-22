@@ -5,7 +5,6 @@ import Modele.Grille;
 import javafx.concurrent.Task;
 
 public class EndOfGameTask extends Task<Integer> {
-
 	private final static String VICTORY_TEXT="You've won !";
 	private final static String LOSE_TEXT="You've lost !";
 	private Grille modelGrid;

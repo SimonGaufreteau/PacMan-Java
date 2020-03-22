@@ -1,12 +1,9 @@
 package Modele;
 
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Fantome extends Entite {
-    private Random r = new Random();
-
     public Fantome(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
@@ -21,7 +18,6 @@ public class Fantome extends Entite {
         if(direction==null) direction=Depl.getRandom();
         Depl symetrical = direction.getSymetrical();
         try {
-
             if (grille.OkDepl(symetrical, this)) {
                 this.direction = symetrical;
                 grille.depl(symetrical, this);

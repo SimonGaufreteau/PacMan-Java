@@ -4,6 +4,7 @@ import Modele.Entite;
 import Modele.Grille;
 import TasksThreads.DisplayThread;
 import TasksThreads.EndOfGameTask;
+import TasksThreads.LivesTask;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
