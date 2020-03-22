@@ -51,6 +51,7 @@ public class DisplayThread extends Task<Void> {
 							else if (modelGrid.getObjDynam(i, j) == ObjDynam.BONUS) tab[i][j].setImage(imBigPoint);
 						}
 					}
+
 				}
 				//Drawing Entities
 				Map<Entite, Point> map = modelGrid.getMap();

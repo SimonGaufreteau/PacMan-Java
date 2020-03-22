@@ -13,6 +13,11 @@ public class SimplePacMan extends Entite {
     Random r = new Random();
     private Depl cachedDirection;
     private boolean invisible;
+    private static int INVISIBLE_DELAY=3000;
+    private static int UNTOUCHABLE_DELAY=3000;
+    private boolean untouchable;
+    private int timeLeftUntouchable;
+    private int timeLeftInvisible;
 
     public SimplePacMan(Grille grille,int delay){
         this.grille=grille;
@@ -20,18 +25,33 @@ public class SimplePacMan extends Entite {
         direction=null;
         cachedDirection=null;
         lives=3;
-        invisible=true;
+        invisible=false;
+        timeLeftInvisible=0;
+        timeLeftUntouchable=0;
+        untouchable=false;
     }
     @Override
     public void run() {
         running=true;
         while(running) { // spm descent dans la grille à chaque pas de temps
+            if(timeLeftInvisible<=0 && invisible){
+                invisible=false;
+                System.out.println("Pacman no longer invisible !");
+            }
+            if (timeLeftUntouchable <= 0 && untouchable) {
+                untouchable=false;
+                System.out.println("Pacman no longer untouchable !");
+            }
             try {
                 action();
             } catch (Exception e) {
                 e.printStackTrace();
             }
             try {
+                if(invisible)
+                    timeLeftInvisible-=delay;
+                if(untouchable)
+                    timeLeftUntouchable-=delay;
                 Thread.sleep(delay); // pause
             } catch (InterruptedException ex) {
                 Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
@@ -74,5 +94,21 @@ public class SimplePacMan extends Entite {
 
     public boolean isInvisible() {
         return invisible;
+    }
+
+    public void setInvisible() {
+        invisible=true;
+        untouchable=false;
+        timeLeftUntouchable=0;
+        timeLeftInvisible=INVISIBLE_DELAY;
+    }
+
+    public void setUntouchable(){
+        untouchable=true;
+        timeLeftUntouchable=UNTOUCHABLE_DELAY;
+    }
+
+    public boolean isUntouchable() {
+        return untouchable;
     }
 }

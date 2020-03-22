@@ -119,13 +119,12 @@ public class Grille {
         return map;
     }
 
-    public synchronized void depl(Depl d,Entite e) {
+    public synchronized void depl(Depl d,Entite e) throws Exception {
         Point p = map.get(e);
         if(d==null) return;
         if(p==null) {
             //Note : this can happen when an Entity tries to move while she was already stopped below.
-            return;
-            //throw new Exception("Invalid entity.");
+            throw new Exception("Invalid entity.");
         }
         switch (d){
             case HAUT:
@@ -149,6 +148,10 @@ public class Grille {
                 break;
         }
         if((getObjDynam(p.x,p.y)==ObjDynam.BONUS || getObjDynam(p.x,p.y)==ObjDynam.POINT )&& e instanceof SimplePacMan) {
+            if(getObjDynam(p.x,p.y)==ObjDynam.BONUS){
+                System.out.println("pacman set invisible !");
+                ((SimplePacMan)e).setInvisible();
+            }
             grilleDynam[p.x][p.y]=null;
             nbBonusLeft--;
         }
@@ -158,11 +161,25 @@ public class Grille {
             if(map.get(entite)==null) break;
             Point point = map.get(entite).getLocation();
             if(point.x==p.x && point.y==p.y && entite.getClass()!=e.getClass()){
-                if(e instanceof SimplePacMan && ((SimplePacMan) e).isInvisible()){
-                    entite.lives--;
+                if(e instanceof SimplePacMan && !((SimplePacMan) e).isUntouchable()){
+                    if(((SimplePacMan) e).isInvisible()){
+                        entite.lives--;
+                    }
+                    else{
+                        ((SimplePacMan) e).setUntouchable();
+                        e.lives--;
+                        System.out.println(e.lives +"left, pacman is untouchable !");
+                    }
                 }
-                else{
-                    e.lives--;
+                else if (entite instanceof SimplePacMan && !(((SimplePacMan) entite).isUntouchable())){
+                    if(((SimplePacMan) entite).isInvisible()){
+                        e.lives--;
+                    }
+                    else{
+                        ((SimplePacMan) entite).setUntouchable();
+                        entite.lives--;
+                        System.out.println(entite.lives +"left, pacman is untouchable !");
+                    }
                 }
                 if(e.lives==0){
                     e.stopEntite();
@@ -177,12 +194,11 @@ public class Grille {
     }
 
 
-    public boolean OkDepl(Depl depl,Entite e) {
+    public boolean OkDepl(Depl depl,Entite e) throws Exception {
         Point p = map.get(e);
         if(depl==null) return false;
         if(p==null) {
-            return false;
-            //throw new Exception("Invalid entity.");
+            throw new Exception("Invalid entity.");
         }
         switch(depl){
             case HAUT:

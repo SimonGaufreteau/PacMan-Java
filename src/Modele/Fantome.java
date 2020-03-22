@@ -20,11 +20,16 @@ public class Fantome extends Entite {
     private void changeDirection() throws Exception {
         if(direction==null) direction=Depl.getRandom();
         Depl symetrical = direction.getSymetrical();
-        if(grille.OkDepl(symetrical,this)){
-            this.direction=symetrical;
-            grille.depl(symetrical,this);
+        try {
+
+            if (grille.OkDepl(symetrical, this)) {
+                this.direction = symetrical;
+                grille.depl(symetrical, this);
+            } else changeDirectionRecur(direction);
+        } catch (Exception ignored){
+            //TODO : remove
+            System.out.println("Problem with changeDirection");
         }
-        else changeDirectionRecur(direction);
     }
 
     private synchronized void changeDirectionRecur(Depl depl) throws Exception{
@@ -33,6 +38,7 @@ public class Fantome extends Entite {
             grille.depl(depl,this);
         }
         else changeDirectionRecur(Depl.getRandom());
+
     }
 
     @Override

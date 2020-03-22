@@ -22,7 +22,6 @@ public class MainVue extends Application {
 		/*BorderPane root = new BorderPane();*/
 		FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("main.fxml"));
 
-
 		//Init modelGrid (read-only here --> MVC)
 		Grille modelGrid=new Grille(FILENAME);
 		int SIZE_X=modelGrid.getSIZE_X();
@@ -41,19 +40,18 @@ public class MainVue extends Application {
 		BorderPane root = fxmlloader.load();
 		eventController.setBindings(root);
 
-
-
-
+		stage.setResizable(false);
 
 		//Initialising the GridPane containing the actual images
 		GridPane grid = (GridPane) root.getCenter();
-
 
 		//Init with empty images
 		for (int i = 0; i < SIZE_X; i++) {
 			for (int j = 0; j < SIZE_Y; j++) {
 				ImageView img = new ImageView();
 				tab[i][j] = img;
+				tab[i][j].setFitHeight(BLOCK_SIZE);
+				tab[i][j].setFitWidth(BLOCK_SIZE);
 				grid.add(img, i, j);
 			}
 		}
@@ -70,52 +68,6 @@ public class MainVue extends Application {
 
 		//Setting and starting the threads
 		threadController.startThreads();
-
-
-
-
-		//Adding a text to display on the win condition (binding)
-		/*Text text=new Text();
-		text.setFont(new Font(50));
-		BindingController.bindText(text,threadController.getEndOfGameTask(),root);*/
-
-
-		//Adding a retry button
-		/*Button button = new Button("Retry ?");
-		button.setOnAction(actionEvent -> {
-			try {
-				threadController.interruptThreads();
-				threadController.resetGrid();
-
-				grid.requestFocus();
-				eventController.reset(modelGrid);
-
-				threadController.resetThreads(tab,modelGrid);
-				BindingController.bindText(text,threadController.getEndOfGameTask(),root);
-				threadController.startThreads();
-
-
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-
-		});
-
-		Button endGame = new Button("Engame ?");
-		endGame.setOnAction(actionEvent -> {
-			try{
-				modelGrid.setNbBonusLeft(0);
-			}
-			catch (Exception e) {
-				e.printStackTrace();
-			}
-		});
-
-
-		root.setRight(endGame);
-		root.setLeft(button);*/
-
 
 		//Showing the stage with the grid on the focus
 		stage.show();
