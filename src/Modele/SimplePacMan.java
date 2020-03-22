@@ -12,12 +12,15 @@ import java.util.logging.Logger;
 public class SimplePacMan extends Entite {
     Random r = new Random();
     private Depl cachedDirection;
+    private boolean invisible;
 
     public SimplePacMan(Grille grille,int delay){
         this.grille=grille;
         this.delay=delay;
         direction=null;
         cachedDirection=null;
+        lives=3;
+        invisible=true;
     }
     @Override
     public void run() {
@@ -63,5 +66,13 @@ public class SimplePacMan extends Entite {
 
     public void setCachedDirection(Depl cachedDirection) {
         this.cachedDirection = cachedDirection;
+    }
+
+	public boolean hasLives() {
+        return lives>0;
+	}
+
+    public boolean isInvisible() {
+        return invisible;
     }
 }

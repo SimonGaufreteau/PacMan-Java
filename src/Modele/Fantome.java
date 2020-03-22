@@ -27,7 +27,7 @@ public class Fantome extends Entite {
         else changeDirectionRecur(direction);
     }
 
-    private void changeDirectionRecur(Depl depl) throws Exception{
+    private synchronized void changeDirectionRecur(Depl depl) throws Exception{
         if(grille.OkDepl(depl,this)){
             this.direction=depl;
             grille.depl(depl,this);

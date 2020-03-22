@@ -7,17 +7,19 @@ import java.io.FileReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class Grille {
     private ObjStatic[][] grilleObj;
     private ObjDynam[][] grilleDynam;
-    private Map<Entite, Point> map;
+    private ConcurrentMap<Entite, Point> map;
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
-    private final int PACMAN_DELAY=200;
+    private final int PACMAN_DELAY=100;
     private final int FANTOME_DELAY=200;
-    private final int FANTOME_NUMBER=6;
+    private final int FANTOME_NUMBER=10;
 
     private final int GHOST_XPOS=12;
     private final int GHOST_YPOS=12;
@@ -68,7 +70,7 @@ public class Grille {
             i++;
         }
 
-        map=new HashMap<>();
+        map=new ConcurrentHashMap<>();
         addGhosts(GHOST_XPOS,GHOST_YPOS);
         SimplePacMan simplePacMan = new SimplePacMan(this,PACMAN_DELAY);
         map.put(simplePacMan,new Point(PCM_XPOS,PCM_YPOS));
@@ -85,34 +87,6 @@ public class Grille {
             throw e;
         }
     }
-
-
-    /*public Grille(int x,int y){
-        SIZE_Y=y;
-        SIZE_X=x;
-        map = new HashMap<>();
-        generateRandomObjStaticGrid();
-        addGhosts();
-    }
-
-
-    private void generateRandomObjStaticGrid(){
-        grilleObj=new ObjStatic[SIZE_X][SIZE_Y];
-        grilleDynam= new ObjDynam[SIZE_X][SIZE_Y];
-        for(int i=0;i<SIZE_X;i++){
-            for (int j=0;j<SIZE_Y;j++){
-                if(i==0&&j==0) grilleObj[i][j]=ObjStatic.VIDE;
-                else if(r.nextInt(100)<80) {
-                    grilleObj[i][j] = ObjStatic.VIDE;
-                    if(r.nextInt(100)<70)
-                        grilleDynam[i][j]=ObjDynam.POINT;
-                }
-                else grilleObj[i][j]=ObjStatic.MUR;
-            }
-        }
-        SimplePacMan spm = new SimplePacMan(this,PACMAN_DELAY);
-        map.put(spm,new Point(0,0));
-    }*/
 
     private void addGhosts(){
         for (int i = 0; i< FANTOME_NUMBER; i++){
@@ -145,10 +119,14 @@ public class Grille {
         return map;
     }
 
-    public void depl(Depl d,Entite e) throws Exception {
+    public synchronized void depl(Depl d,Entite e) {
         Point p = map.get(e);
         if(d==null) return;
-        if(p==null) throw new Exception("Invalid entity.");
+        if(p==null) {
+            //Note : this can happen when an Entity tries to move while she was already stopped below.
+            return;
+            //throw new Exception("Invalid entity.");
+        }
         switch (d){
             case HAUT:
                 if (p.y == 0) {
@@ -174,13 +152,38 @@ public class Grille {
             grilleDynam[p.x][p.y]=null;
             nbBonusLeft--;
         }
+
+        //Checking if Pacman is losing a life and if a ghost is dying
+        for(Entite entite:map.keySet()){
+            if(map.get(entite)==null) break;
+            Point point = map.get(entite).getLocation();
+            if(point.x==p.x && point.y==p.y && entite.getClass()!=e.getClass()){
+                if(e instanceof SimplePacMan && ((SimplePacMan) e).isInvisible()){
+                    entite.lives--;
+                }
+                else{
+                    e.lives--;
+                }
+                if(e.lives==0){
+                    e.stopEntite();
+                    map.remove(e);
+                }
+                else if(entite.lives==0){
+                    entite.stopEntite();
+                    map.remove(entite);
+                }
+            }
+        }
     }
 
 
-    public boolean OkDepl(Depl depl,Entite e) throws Exception {
+    public boolean OkDepl(Depl depl,Entite e) {
         Point p = map.get(e);
         if(depl==null) return false;
-        if(p==null) throw new Exception("Invalid entity.");
+        if(p==null) {
+            return false;
+            //throw new Exception("Invalid entity.");
+        }
         switch(depl){
             case HAUT:
                 if(p.y==0) return isVide(p.x,SIZE_Y-1);
@@ -201,7 +204,7 @@ public class Grille {
     public void interrupt(){
         if(map==null) return;
         for(Entite e:map.keySet()){
-            e.interrupt();
+            e.stopEntite();
         }
     }
 
@@ -231,5 +234,18 @@ public class Grille {
 
     public void setNbBonusLeft(int nbBonusLeft) {
         this.nbBonusLeft = nbBonusLeft;
+    }
+
+    public int getNumberOfGhosts(){
+        int ret = 0;
+        for(Entite e :map.keySet()){
+            if (e instanceof Fantome) {
+                ret++;
+            }
+        }
+        return ret;
+    }
+    public boolean hasGhosts() {
+        return getNumberOfGhosts()>0;
     }
 }

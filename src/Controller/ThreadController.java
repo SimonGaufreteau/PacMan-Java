@@ -33,7 +33,7 @@ public class ThreadController {
 			thread.interrupt();
 		}
 		for(Entite e:entites){
-			e.interrupt();
+			e.stopEntite();
 		}
 	}
 

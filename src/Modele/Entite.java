@@ -10,6 +10,7 @@ public abstract class Entite extends Thread {
     protected Depl direction;
     protected Random r=new Random();
     protected boolean running=false;
+    protected int lives=1;
 
     protected void randomAction() throws Exception {
         int delta = r.nextInt(4);
@@ -18,7 +19,7 @@ public abstract class Entite extends Thread {
             grille.depl(depl,this);
     }
 
-    public void interrupt(){
+    public void stopEntite(){
         running=false;
     }
 
