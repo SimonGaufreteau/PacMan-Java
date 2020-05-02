@@ -17,8 +17,8 @@ public class ThreadController {
 	private ArrayList<Entite> entites;
 	private Grille modelGrid;
 
-	public ThreadController(Grille modelGrid, ImageView[][] tab){
-		resetThreads(tab,modelGrid);
+	public ThreadController(Grille modelGrid, ImageView[][] tab, ImageView[] lifetab){
+		resetThreads(tab,modelGrid,lifetab);
 	}
 
 	public void startThreads(){
@@ -41,12 +41,12 @@ public class ThreadController {
 		}
 	}
 
-	public void resetThreads(ImageView[][] tab,Grille modelGrid)  {
+	public void resetThreads(ImageView[][] tab, Grille modelGrid, ImageView[] lifetab)  {
 		this.modelGrid=modelGrid;
 		threads=new ArrayList<>();
 		endOfGameTask = new EndOfGameTask(modelGrid,this);
 		threads.add(new Thread(endOfGameTask));
-		displayThread=new DisplayThread(tab,modelGrid);
+		displayThread=new DisplayThread(tab,modelGrid,lifetab);
 		threads.add(new Thread(displayThread));
 		if(livesTask==null) {
 			livesTask= new LivesTask(modelGrid.getPacMan());

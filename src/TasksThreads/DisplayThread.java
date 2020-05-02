@@ -12,6 +12,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DisplayThread extends Task<Void> {
 	private ImageView[][] tab;
+	private ImageView[] lifeTab;
 	private Grille modelGrid;
 	private AtomicBoolean running = new AtomicBoolean(false);
 	public static final int REFRESH_DELAY = 2;
@@ -19,15 +20,17 @@ public class DisplayThread extends Task<Void> {
 	Image imPM = new Image("Pacman.png");
 	Image imVide = new Image("Vide.png");
 	Image imFond = new Image("fondNoir.png");
-	Image imBrique = new Image("Brique.jpg");
+	Image imBrique = new Image("wall.png");
 	Image imFantome = new Image("Fantome.jpg");
 	Image imPoint = new Image("point.png");
 	Image imBigPoint = new Image("Big-point.png");
+	Image imHeart = new Image("pixel_heart_19.png");
 
 	//Use init if you want a safe init of the Observer, user reset if you want to reset the grid / tab;
-	public DisplayThread(ImageView[][] tab, Grille modelGrid) {
+	public DisplayThread(ImageView[][] tab, Grille modelGrid,ImageView[] lifeTab) {
 		if (modelGrid == null) throw new NullPointerException();
 		this.tab = tab;
+		this.lifeTab=lifeTab;
 		this.modelGrid = modelGrid;
 	}
 
@@ -62,6 +65,18 @@ public class DisplayThread extends Task<Void> {
 					else if (e instanceof Fantome)
 						tab[point.x][point.y].setImage(imFantome);
 				}
+
+				//Drawing life
+				int lives;
+				if(modelGrid.getPacMan()==null) lives=0;
+				else  lives = modelGrid.getPacMan().getLives();
+				//System.out.println("Lives : "+lives);
+				for(int i=0;i<SimplePacMan.MAX_HEALTH;i++) {
+					if (i < lives)
+						lifeTab[i].setImage(imHeart);
+					else
+						lifeTab[i].setImage(imVide);
+				}
 			});
 			if (firstInstance) {
 				firstInstance = false;
@@ -69,7 +84,7 @@ public class DisplayThread extends Task<Void> {
 			try {
 				Thread.sleep(REFRESH_DELAY);
 			} catch (InterruptedException e) {
-				System.out.println("Thread stopped.");
+				//System.out.println("Thread stopped.");
 				return null;
 			}
 		}

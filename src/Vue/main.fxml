@@ -30,7 +30,10 @@
       </Menu>
     </MenuBar>
   </top>
+
   <bottom>
-    <Text id="lives"/>
+    <GridPane>
+
+    </GridPane>
   </bottom>
 </BorderPane>

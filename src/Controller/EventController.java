@@ -13,12 +13,14 @@ public class EventController {
 	private Grille modelGrid;
 	private ImageView[][] tab;
 	private ThreadController threadController;
+	private ImageView[] lifetab;
 
-	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab) {
+	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
 		this.spm=modelGrid.getPacMan();
 		this.threadController=threadController;
 		this.modelGrid=modelGrid;
 		this.tab=tab;
+		this.lifetab = lifetab;
 	}
 
 	private void reset(){
@@ -76,7 +78,7 @@ public class EventController {
 			threadController.interruptThreads();
 			threadController.resetGrid();
 			reset();
-			threadController.resetThreads(tab,modelGrid);
+			threadController.resetThreads(tab,modelGrid,lifetab);
 			threadController.startThreads();
 	}
 

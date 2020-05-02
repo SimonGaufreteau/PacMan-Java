@@ -18,8 +18,6 @@ public class LivesTask extends Task<String> {
 		while(running.get()){
 			updateMessage(simplePacMan.getLives()+" lives left !");
 		}
-		/*updateMessage("0 lives left !");
-		call();*/
 		return null;
 	}
 

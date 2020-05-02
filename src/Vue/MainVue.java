@@ -3,16 +3,13 @@ package Vue;
 import Controller.EventController;
 import Controller.ThreadController;
 import Modele.Grille;
-import TasksThreads.LivesTask;
+import Modele.SimplePacMan;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -33,11 +30,12 @@ public class MainVue extends Application {
 
 		//Initialising an ImageView tab which will contains grid images.
 		ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y];
+		ImageView[] lifetab = new ImageView[SimplePacMan.MAX_HEALTH];
 
-		ThreadController threadController = new ThreadController(modelGrid,tab);
+		ThreadController threadController = new ThreadController(modelGrid,tab,lifetab);
 
 		//Generating event handler
-		EventController eventController = new EventController(modelGrid,threadController,tab);
+		EventController eventController = new EventController(modelGrid,threadController,tab,lifetab);
 		fxmlloader.setController(eventController);
 
 		//Setting the binds
@@ -47,7 +45,7 @@ public class MainVue extends Application {
 
 
 		//binding the bottom text to the number of lives left
-		Text text= (Text) root.getBottom();
+		/*Text text= (Text) root.getBottom();
 		LivesTask livesTask=threadController.getLivesTask();
 		text.textProperty().bind(livesTask.messageProperty());
 		text.setFont(Font.font("Verdana",BLOCK_SIZE-1));
@@ -55,7 +53,8 @@ public class MainVue extends Application {
 
 
 		new Thread(livesTask).start();
-		root.setBottom(text);
+		root.setBottom(text);*/
+
 		stage.setResizable(true);
 
 		//Initialising the GridPane containing the actual images
@@ -72,6 +71,15 @@ public class MainVue extends Application {
 			}
 		}
 
+		GridPane lifeGrid = (GridPane) root.getBottom();
+		for(int i=0;i<3;i++){
+			ImageView imageView = new ImageView();
+			lifetab[i]=imageView;
+			lifetab[i].setFitHeight(BLOCK_SIZE);
+			lifetab[i].setFitWidth(BLOCK_SIZE);
+			lifeGrid.add(imageView,i,0);
+		}
+		//root.setBottom(lifeGrid);
 
 
 		//Adding elements to the root

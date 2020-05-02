@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class SimplePacMan extends Entite {
+    public static int MAX_HEALTH = 3;
     Random r = new Random();
     private Depl cachedDirection;
     private boolean invisible;
@@ -24,7 +25,7 @@ public class SimplePacMan extends Entite {
         this.delay=delay;
         direction=null;
         cachedDirection=null;
-        lives=3;
+        lives=MAX_HEALTH;
         invisible=false;
         timeLeftInvisible=0;
         timeLeftUntouchable=0;
