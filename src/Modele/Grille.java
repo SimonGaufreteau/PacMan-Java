@@ -4,7 +4,6 @@ import java.awt.*;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
@@ -168,7 +167,6 @@ public class Grille {
                     else{
                         ((SimplePacMan) e).setUntouchable();
                         e.lives--;
-                        System.out.println(e.lives +"left, pacman is untouchable !");
                     }
                 }
                 else if (entite instanceof SimplePacMan && !(((SimplePacMan) entite).isUntouchable())){
@@ -178,7 +176,6 @@ public class Grille {
                     else{
                         ((SimplePacMan) entite).setUntouchable();
                         entite.lives--;
-                        System.out.println(entite.lives +"left, pacman is untouchable !");
                     }
                 }
                 if(e.lives==0){

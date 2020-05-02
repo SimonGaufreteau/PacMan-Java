@@ -81,8 +81,7 @@ public class EventController {
 	}
 
 	public void handleStop(ActionEvent actionEvent){
-		threadController.stopGame();
-		threadController.interruptThreads();
+		threadController.stopAll();
 		Platform.exit();
 
 	}

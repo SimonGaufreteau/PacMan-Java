@@ -4,6 +4,7 @@ import Modele.Entite;
 import Modele.Grille;
 import TasksThreads.DisplayThread;
 import TasksThreads.EndOfGameTask;
+import TasksThreads.LivesTask;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 public class ThreadController {
 	private EndOfGameTask endOfGameTask;
 	private DisplayThread displayThread;
+	private LivesTask livesTask;
 	private ArrayList<Thread> threads;
 	private ArrayList<Entite> entites;
 	private Grille modelGrid;
@@ -20,7 +22,6 @@ public class ThreadController {
 	}
 
 	public void startThreads(){
-		//Starting the end condition for the game.
 		for(Thread thread:threads){
 			thread.start();
 		}
@@ -47,6 +48,11 @@ public class ThreadController {
 		threads.add(new Thread(endOfGameTask));
 		displayThread=new DisplayThread(tab,modelGrid);
 		threads.add(new Thread(displayThread));
+		if(livesTask==null) {
+			livesTask= new LivesTask(modelGrid.getPacMan());
+		}
+		else livesTask.setPacman(modelGrid.getPacMan());
+		threads.add(new Thread(livesTask));
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
 	}
@@ -58,6 +64,7 @@ public class ThreadController {
 	public EndOfGameTask getEndOfGameTask() {
 		return endOfGameTask;
 	}
+	public LivesTask getLivesTask(){return livesTask;}
 
 	public void resetGrid(){
 		try {
@@ -65,5 +72,11 @@ public class ThreadController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void stopAll(){
+		stopGame();
+		interruptThreads();
+		livesTask.stopRunning();
 	}
 }

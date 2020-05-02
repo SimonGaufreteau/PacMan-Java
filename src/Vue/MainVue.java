@@ -10,6 +10,8 @@ import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -46,9 +48,10 @@ public class MainVue extends Application {
 
 		//binding the bottom text to the number of lives left
 		Text text= (Text) root.getBottom();
-		LivesTask livesTask = new LivesTask(modelGrid.getPacMan());
+		LivesTask livesTask=threadController.getLivesTask();
 		text.textProperty().bind(livesTask.messageProperty());
-
+		text.setFont(Font.font("Verdana",BLOCK_SIZE-1));
+		text.setFill(Color.BLACK);
 
 
 		new Thread(livesTask).start();
@@ -73,7 +76,7 @@ public class MainVue extends Application {
 
 		//Adding elements to the root
 		//root.setCenter(grid);
-		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*BLOCK_SIZE);
+		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*(BLOCK_SIZE+2));
 
 		//Setting the scene
 		stage.setTitle("Pacman !");

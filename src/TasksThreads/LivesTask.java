@@ -3,19 +3,31 @@ package TasksThreads;
 import Modele.SimplePacMan;
 import javafx.concurrent.Task;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 public class LivesTask extends Task<String> {
 	SimplePacMan simplePacMan;
+	private AtomicBoolean running=new AtomicBoolean(false);
 	public LivesTask(SimplePacMan spm){
 		this.simplePacMan=spm;
 	}
 	@Override
 	protected String call() {
-		while(!simplePacMan.isRunning()){
-			if(isCancelled()) return null;
+		running.set(true);
+		System.out.println("Called the lives task");
+		while(running.get()){
+			updateMessage(simplePacMan.getLives()+" lives left !");
 		}
-		while(simplePacMan.hasLives() && simplePacMan.isRunning()){
-			updateMessage(String.valueOf(simplePacMan.getLives()));
-		}
+		/*updateMessage("0 lives left !");
+		call();*/
 		return null;
+	}
+
+	public void setPacman(SimplePacMan pacMan) {
+		this.simplePacMan=pacMan;
+	}
+
+	public void stopRunning(){
+		running.set(false);
 	}
 }
