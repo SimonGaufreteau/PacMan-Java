@@ -4,9 +4,14 @@ import Modele.Depl;
 import Modele.Grille;
 import Modele.SimplePacMan;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioMenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+
+import java.util.Iterator;
 
 public class EventController {
 	private SimplePacMan spm;
@@ -14,6 +19,7 @@ public class EventController {
 	private ImageView[][] tab;
 	private ThreadController threadController;
 	private ImageView[] lifetab;
+	private ObservableList<MenuItem> diffs;
 
 	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
 		this.spm=modelGrid.getPacMan();
@@ -57,6 +63,11 @@ public class EventController {
 		});
 	}
 
+	public void setMenus(ObservableList<MenuItem> menus){
+		this.diffs =menus;
+
+	}
+
 	public void moveLeft(){
 		spm.setCachedDirection(Depl.GAUCHE);
 	}
@@ -75,9 +86,11 @@ public class EventController {
 
 
 	public void handleRestart(ActionEvent actionEvent) {
-			threadController.interruptThreads();
+		modelGrid.changeDifficulty(getDifficulty());
+		threadController.interruptThreads();
 			threadController.resetGrid();
 			reset();
+
 			threadController.resetThreads(tab,modelGrid,lifetab);
 			threadController.startThreads();
 	}
@@ -86,6 +99,19 @@ public class EventController {
 		threadController.stopAll();
 		Platform.exit();
 
+	}
+
+	private int getDifficulty(){
+		Iterator<MenuItem> it = diffs.iterator();
+		int i=1;
+		while (it.hasNext()){
+			MenuItem diff = it.next();
+			if(diff instanceof RadioMenuItem && ((RadioMenuItem) diff).isSelected()){
+				return i;
+			}
+			i++;
+		}
+		return 1;
 	}
 
 }

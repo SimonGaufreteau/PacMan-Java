@@ -16,9 +16,11 @@ public class Grille {
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
-    private final int PACMAN_DELAY=100;
-    private final int FANTOME_DELAY=200;
-    private final int FANTOME_NUMBER=10;
+    private final int BASE_PACMAN_DELAY=100;
+    private final int BASE_FANTOME_DELAY=200;
+    private int PACMAN_DELAY=BASE_PACMAN_DELAY;
+    private int FANTOME_DELAY=BASE_FANTOME_DELAY;
+    private int FANTOME_NUMBER=10;
 
     private final int GHOST_XPOS=12;
     private final int GHOST_YPOS=12;
@@ -260,5 +262,9 @@ public class Grille {
     }
     public boolean hasGhosts() {
         return getNumberOfGhosts()>0;
+    }
+
+    public void changeDifficulty(int diff){
+        FANTOME_DELAY=BASE_FANTOME_DELAY-50*(diff-1);
     }
 }

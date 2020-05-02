@@ -15,10 +15,10 @@
         <MenuItem mnemonicParsing="false" fx:id="restart" onAction="#handleRestart" text="Restart"/>
         <MenuItem mnemonicParsing="false" fx:id="close" onAction="#handleStop" text="Close" />
       </Menu>
-      <Menu mnemonicParsing="false" text="Difficulty">
-        <MenuItem mnemonicParsing="false" text="1 - Random (Easy)"/>
-        <MenuItem mnemonicParsing="false" text="2 - Advanced Random (Medium)"/>
-        <MenuItem mnemonicParsing="false" text="3 - Targeted (Hard)"/>
+      <Menu mnemonicParsing="false" text="Difficulty" fx:id="diff">
+        <RadioMenuItem mnemonicParsing="false" text="1 - Slow (Easy)" selected="true"/>
+        <RadioMenuItem mnemonicParsing="false" text="2 - Normal (Medium)"/>
+        <RadioMenuItem mnemonicParsing="false" text="3 - Fast (Hard)"/>
       </Menu>
       <Menu mnemonicParsing="false" text="Ghosts">
         <MenuItem mnemonicParsing="false">
