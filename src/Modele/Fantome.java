@@ -22,10 +22,7 @@ public class Fantome extends Entite {
                 this.direction = symetrical;
                 grille.depl(symetrical, this);
             } else changeDirectionRecur(direction);
-        } catch (Exception ignored){
-            //TODO : remove
-            System.out.println("Problem with changeDirection");
-        }
+        } catch (Exception ignored){}
     }
 
     private synchronized void changeDirectionRecur(Depl depl) throws Exception{

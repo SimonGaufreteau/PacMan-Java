@@ -42,10 +42,15 @@ public class MainVue extends Application {
 		BorderPane root = fxmlloader.load();
 		eventController.setBindings(root);
 
+
+
 		//binding the bottom text to the number of lives left
 		Text text= (Text) root.getBottom();
 		LivesTask livesTask = new LivesTask(modelGrid.getPacMan());
 		text.textProperty().bind(livesTask.messageProperty());
+
+
+
 		new Thread(livesTask).start();
 		root.setBottom(text);
 		stage.setResizable(true);

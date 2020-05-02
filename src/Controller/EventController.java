@@ -3,6 +3,7 @@ package Controller;
 import Modele.Depl;
 import Modele.Grille;
 import Modele.SimplePacMan;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -78,4 +79,12 @@ public class EventController {
 			threadController.resetThreads(tab,modelGrid);
 			threadController.startThreads();
 	}
+
+	public void handleStop(ActionEvent actionEvent){
+		threadController.stopGame();
+		threadController.interruptThreads();
+		Platform.exit();
+
+	}
+
 }

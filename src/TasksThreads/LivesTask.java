@@ -9,8 +9,11 @@ public class LivesTask extends Task<String> {
 		this.simplePacMan=spm;
 	}
 	@Override
-	protected String call() throws Exception {
-		while(simplePacMan.hasLives()){
+	protected String call() {
+		while(!simplePacMan.isRunning()){
+			if(isCancelled()) return null;
+		}
+		while(simplePacMan.hasLives() && simplePacMan.isRunning()){
 			updateMessage(String.valueOf(simplePacMan.getLives()));
 		}
 		return null;

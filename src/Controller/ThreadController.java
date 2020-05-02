@@ -4,13 +4,13 @@ import Modele.Entite;
 import Modele.Grille;
 import TasksThreads.DisplayThread;
 import TasksThreads.EndOfGameTask;
-import TasksThreads.LivesTask;
 import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 
 public class ThreadController {
 	private EndOfGameTask endOfGameTask;
+	private DisplayThread displayThread;
 	private ArrayList<Thread> threads;
 	private ArrayList<Entite> entites;
 	private Grille modelGrid;
@@ -30,6 +30,8 @@ public class ThreadController {
 	}
 
 	public void interruptThreads(){
+		endOfGameTask.cancel();
+		displayThread.stopThread();
 		for(Thread thread:threads){
 			thread.interrupt();
 		}
@@ -43,7 +45,7 @@ public class ThreadController {
 		threads=new ArrayList<>();
 		endOfGameTask = new EndOfGameTask(modelGrid,this);
 		threads.add(new Thread(endOfGameTask));
-		DisplayThread displayThread=new DisplayThread(tab,modelGrid);
+		displayThread=new DisplayThread(tab,modelGrid);
 		threads.add(new Thread(displayThread));
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
