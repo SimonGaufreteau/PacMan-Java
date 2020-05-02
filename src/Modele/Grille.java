@@ -20,10 +20,10 @@ public class Grille {
     private final int BASE_FANTOME_DELAY=200;
     private int PACMAN_DELAY=BASE_PACMAN_DELAY;
     private int FANTOME_DELAY=BASE_FANTOME_DELAY;
-    private int FANTOME_NUMBER=10;
+    private int FANTOME_NUMBER=4;
 
-    private final int GHOST_XPOS=12;
-    private final int GHOST_YPOS=12;
+    private int GHOST_XPOS;
+    private int GHOST_YPOS;
     private final int PCM_XPOS=1;
     private final int PCM_YPOS=1;
 
@@ -71,6 +71,8 @@ public class Grille {
             i++;
         }
 
+        GHOST_XPOS = SIZE_X/2;
+        GHOST_YPOS = SIZE_Y/2;
         map=new ConcurrentHashMap<>();
         addGhosts(GHOST_XPOS,GHOST_YPOS);
         SimplePacMan simplePacMan = new SimplePacMan(this,PACMAN_DELAY);
@@ -266,5 +268,9 @@ public class Grille {
 
     public void changeDifficulty(int diff){
         FANTOME_DELAY=BASE_FANTOME_DELAY-50*(diff-1);
+    }
+
+    public void setFANTOME_NUMBER(int fantome_number){
+        FANTOME_NUMBER=fantome_number;
     }
 }

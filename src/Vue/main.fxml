@@ -23,8 +23,7 @@
       <Menu mnemonicParsing="false" text="Ghosts">
         <MenuItem mnemonicParsing="false">
           <graphic>
-            <Slider majorTickUnit="1.0" max="10.0" min="1.0" minorTickCount="0" showTickLabels="true"
-                    snapToTicks="true"/>
+            <Slider majorTickUnit="1.0" max="10.0" min="1.0" value="4" minorTickCount="0" showTickLabels="true" snapToTicks="true" />
           </graphic>
         </MenuItem>
       </Menu>

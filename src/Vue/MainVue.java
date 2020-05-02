@@ -8,8 +8,8 @@ import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -44,7 +44,7 @@ public class MainVue extends Application {
 		BorderPane root = fxmlloader.load();
 
 
-		ObservableList<MenuItem> menus = ((MenuBar)(root.getTop())).getMenus().get(1).getItems();
+		ObservableList<Menu> menus = ((MenuBar)(root.getTop())).getMenus();
 		eventController.setMenus(menus);
 
 		//Setting the binds

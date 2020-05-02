@@ -6,8 +6,10 @@ import Modele.SimplePacMan;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.Slider;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
@@ -19,7 +21,7 @@ public class EventController {
 	private ImageView[][] tab;
 	private ThreadController threadController;
 	private ImageView[] lifetab;
-	private ObservableList<MenuItem> diffs;
+	private ObservableList<Menu> diffs;
 
 	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
 		this.spm=modelGrid.getPacMan();
@@ -63,9 +65,8 @@ public class EventController {
 		});
 	}
 
-	public void setMenus(ObservableList<MenuItem> menus){
+	public void setMenus(ObservableList<Menu> menus){
 		this.diffs =menus;
-
 	}
 
 	public void moveLeft(){
@@ -86,6 +87,7 @@ public class EventController {
 
 
 	public void handleRestart(ActionEvent actionEvent) {
+		modelGrid.setFANTOME_NUMBER(getGhosts());
 		modelGrid.changeDifficulty(getDifficulty());
 		threadController.interruptThreads();
 			threadController.resetGrid();
@@ -102,7 +104,7 @@ public class EventController {
 	}
 
 	private int getDifficulty(){
-		Iterator<MenuItem> it = diffs.iterator();
+		Iterator<MenuItem> it = diffs.get(1).getItems().iterator();
 		int i=1;
 		while (it.hasNext()){
 			MenuItem diff = it.next();
@@ -112,6 +114,13 @@ public class EventController {
 			i++;
 		}
 		return 1;
+	}
+
+	private int getGhosts(){
+		ObservableList<MenuItem> it = diffs.get(2).getItems();
+		Slider slider = (Slider)it.get(0).getGraphic();
+		int nb =(int)slider.getValue();
+		return nb;
 	}
 
 }
