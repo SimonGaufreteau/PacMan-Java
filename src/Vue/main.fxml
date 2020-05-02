@@ -32,8 +32,14 @@
   </top>
 
   <bottom>
-    <GridPane>
-
-    </GridPane>
+    <BorderPane>
+      <left>
+        <Text text="Lives remaining : "/>
+      </left>
+      <center>
+        <GridPane id="lifeD">
+        </GridPane>
+      </center>
+    </BorderPane>
   </bottom>
 </BorderPane>

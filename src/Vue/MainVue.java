@@ -71,7 +71,7 @@ public class MainVue extends Application {
 			}
 		}
 
-		GridPane lifeGrid = (GridPane) root.getBottom();
+		GridPane lifeGrid = (GridPane) ((BorderPane)(root.getBottom())).getCenter();
 		for(int i=0;i<3;i++){
 			ImageView imageView = new ImageView();
 			lifetab[i]=imageView;
