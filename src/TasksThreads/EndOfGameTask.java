@@ -10,19 +10,26 @@ public class EndOfGameTask extends Task<Integer> {
 	private final static String VICTORY_TEXT="You've won !";
 	private final static String LOSE_TEXT="You've lost !";
 	private Grille modelGrid;
+	private AtomicBoolean running;
 	private ThreadController controller;
-	private AtomicBoolean running= new AtomicBoolean(false);
 
 	public EndOfGameTask(Grille grille, ThreadController threadController){
-		controller=threadController;
-		this.modelGrid=grille;
+		reset(grille, threadController);
+	}
+
+	public void reset(Grille grille,ThreadController threadController) {
+		controller = threadController;
+		this.modelGrid = grille;
+		running = new AtomicBoolean(false);
 	}
 
 	@Override
 	protected Integer call(){
 		running.set(true);
+		System.out.println("test");
+		updateMessage("Waiting for the results...");
 		while(modelGrid.getNbBonusLeft()!=0 && modelGrid.getPacMan().hasLives() && modelGrid.hasGhosts()){
-			if(isCancelled()) break;
+			if(!running.get()) break;
 		}
 		controller.stopGame();
 		if(modelGrid.getNbBonusLeft()==0){
@@ -31,7 +38,12 @@ public class EndOfGameTask extends Task<Integer> {
 		else{
 			updateMessage(LOSE_TEXT);
 		}
+
 		updateProgress(1,1);
 		return 0;
+	}
+
+	public void stopRunning(){
+		running.set(false);
 	}
 }

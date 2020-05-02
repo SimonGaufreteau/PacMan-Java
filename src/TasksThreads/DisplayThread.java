@@ -25,6 +25,8 @@ public class DisplayThread extends Task<Void> {
 	Image imPoint = new Image("point.png");
 	Image imBigPoint = new Image("Big-point.png");
 	Image imHeart = new Image("pixel_heart_19.png");
+	Image imStrong = new Image("pacman-strong.png");
+	Image imUnto = new Image("pacman-untouchable.png");
 
 	//Use init if you want a safe init of the Observer, user reset if you want to reset the grid / tab;
 	public DisplayThread(ImageView[][] tab, Grille modelGrid,ImageView[] lifeTab) {
@@ -60,8 +62,15 @@ public class DisplayThread extends Task<Void> {
 				Map<Entite, Point> map = modelGrid.getMap();
 				for (Entite e : map.keySet()) {
 					Point point = map.get(e);
-					if (e instanceof SimplePacMan)
-						tab[point.x][point.y].setImage(imPM);
+					if (e instanceof SimplePacMan){
+						if(((SimplePacMan) e).isInvisible())
+							tab[point.x][point.y].setImage(imStrong);
+						else if (((SimplePacMan) e).isUntouchable()){
+							tab[point.x][point.y].setImage(imUnto);
+						}
+						else
+							tab[point.x][point.y].setImage(imPM);
+					}
 					else if (e instanceof Fantome)
 						tab[point.x][point.y].setImage(imFantome);
 				}

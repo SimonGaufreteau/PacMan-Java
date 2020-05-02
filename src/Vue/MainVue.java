@@ -1,9 +1,11 @@
 package Vue;
 
+import Controller.BindingController;
 import Controller.EventController;
 import Controller.ThreadController;
 import Modele.Grille;
 import Modele.SimplePacMan;
+import TasksThreads.EndOfGameTask;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -13,6 +15,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class MainVue extends Application {
@@ -51,7 +54,6 @@ public class MainVue extends Application {
 		eventController.setBindings(root);
 
 
-
 		//binding the bottom text to the number of lives left
 		/*Text text= (Text) root.getBottom();
 		LivesTask livesTask=threadController.getLivesTask();
@@ -79,7 +81,9 @@ public class MainVue extends Application {
 			}
 		}
 
-		GridPane lifeGrid = (GridPane) ((BorderPane)(root.getBottom())).getCenter();
+
+		BorderPane bottomPane = (BorderPane)(root.getBottom());
+		GridPane lifeGrid = (GridPane) (bottomPane).getCenter();
 		for(int i=0;i<3;i++){
 			ImageView imageView = new ImageView();
 			lifetab[i]=imageView;
@@ -87,12 +91,14 @@ public class MainVue extends Application {
 			lifetab[i].setFitWidth(BLOCK_SIZE);
 			lifeGrid.add(imageView,i,0);
 		}
-		//root.setBottom(lifeGrid);
 
+		Text text = (Text)bottomPane.getBottom();
+		EndOfGameTask endOfGameTask=threadController.getEndOfGameTask();
+		BindingController.bindText(text,endOfGameTask,bottomPane, BindingController.direction.BOTTOM);
 
 		//Adding elements to the root
 		//root.setCenter(grid);
-		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*(BLOCK_SIZE+2));
+		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*(BLOCK_SIZE+3));
 
 		//Setting the scene
 		stage.setTitle("Pacman !");

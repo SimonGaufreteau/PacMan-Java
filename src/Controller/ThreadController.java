@@ -31,7 +31,7 @@ public class ThreadController {
 	}
 
 	public void interruptThreads(){
-		endOfGameTask.cancel();
+		endOfGameTask.stopRunning();
 		displayThread.stopThread();
 		for(Thread thread:threads){
 			thread.interrupt();
@@ -44,8 +44,7 @@ public class ThreadController {
 	public void resetThreads(ImageView[][] tab, Grille modelGrid, ImageView[] lifetab)  {
 		this.modelGrid=modelGrid;
 		threads=new ArrayList<>();
-		endOfGameTask = new EndOfGameTask(modelGrid,this);
-		threads.add(new Thread(endOfGameTask));
+
 		displayThread=new DisplayThread(tab,modelGrid,lifetab);
 		threads.add(new Thread(displayThread));
 		if(livesTask==null) {
@@ -53,6 +52,9 @@ public class ThreadController {
 		}
 		else livesTask.setPacman(modelGrid.getPacMan());
 		threads.add(new Thread(livesTask));
+		endOfGameTask = new EndOfGameTask(modelGrid,this);
+
+		threads.add(new Thread(endOfGameTask));
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
 	}
@@ -78,5 +80,6 @@ public class ThreadController {
 		stopGame();
 		interruptThreads();
 		livesTask.stopRunning();
+		endOfGameTask.stopRunning();
 	}
 }

@@ -39,6 +39,9 @@
         <GridPane id="lifeD">
         </GridPane>
       </center>
+      <bottom>
+        <Text text="default"/>
+      </bottom>
     </BorderPane>
   </bottom>
 </BorderPane>
