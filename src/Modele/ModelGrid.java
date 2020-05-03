@@ -9,18 +9,24 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-public class Grille {
-    private ObjStatic[][] grilleObj;
-    private ObjDynam[][] grilleDynam;
-    private ConcurrentMap<Entite, Point> map;
+/**
+ * Class used to model the game grid with static and dynamic objects.
+ * @see Entity
+ * @see ObjDynam
+ * @see ObjStatic
+ */
+public class ModelGrid {
+    private ObjStatic[][] gridObj;
+    private ObjDynam[][] gridDynam;
+    private ConcurrentMap<Entity, Point> map;
     private int SIZE_X;
     private int SIZE_Y;
     private Random r = new Random();
     private final int BASE_PACMAN_DELAY=100;
     private final int BASE_FANTOME_DELAY=200;
     private int PACMAN_DELAY=BASE_PACMAN_DELAY;
-    private int FANTOME_DELAY=BASE_FANTOME_DELAY;
-    private int FANTOME_NUMBER=4;
+    private int GHOST_DELAY =BASE_FANTOME_DELAY;
+    private int GHOST_NUMBER =4;
 
     private int GHOST_XPOS;
     private int GHOST_YPOS;
@@ -32,7 +38,7 @@ public class Grille {
 
     private final String FILE_REGEX=" \\| ";
 
-    public Grille(String filename) throws Exception {
+    public ModelGrid(String filename) throws Exception {
         reset(filename);
     }
 
@@ -41,6 +47,12 @@ public class Grille {
         reset(FILENAME);
     }
 
+    /**
+     * Resets the grid from a file. A correct file follows these rules : the separator between cells is a pipe (the '|' char).
+     * The first line describes the size of the file as follows : numberOfColumns | numberOfLines.
+     * The following lines correspond to a matrix of this size.
+     * @apiNote This method also generates Entities, the Ghosts will always spawn in the middle of the grid and Pacman at x=y=1. This can be changed with the {@link #PCM_XPOS} and {@link #PCM_YPOS} variables.
+     */
     public void reset(String filename) throws Exception {
         interrupt();
         this.nbBonusLeft=0;
@@ -52,8 +64,8 @@ public class Grille {
         String[] splitted = line.split(FILE_REGEX);
         getSizeFromLine(splitted);
 
-        grilleObj = new ObjStatic[SIZE_X][SIZE_Y];
-        grilleDynam = new ObjDynam[SIZE_X][SIZE_Y];
+        gridObj = new ObjStatic[SIZE_X][SIZE_Y];
+        gridDynam = new ObjDynam[SIZE_X][SIZE_Y];
         line=br.readLine();
         int i=0;
         while(line!=null && i<SIZE_Y){
@@ -63,9 +75,9 @@ public class Grille {
                 String s = splitted[i1];
                 if (s.length() != 1) throw new Exception("Incorrect character at line "+i+1+" character n°"+i1+" :"+s);
                 char c = s.charAt(0);
-                grilleObj[i1][i] = ObjStatic.getObjFromChar(c);
-                grilleDynam[i1][i] = ObjDynam.getObjFromChar(c);
-                if(grilleDynam[i1][i]!=null)nbBonusLeft++;
+                gridObj[i1][i] = ObjStatic.getObjFromChar(c);
+                gridDynam[i1][i] = ObjDynam.getObjFromChar(c);
+                if(gridDynam[i1][i]!=null)nbBonusLeft++;
             }
             line=br.readLine();
             i++;
@@ -91,38 +103,55 @@ public class Grille {
         }
     }
 
+    /**
+     * The following methods ({@link #addGhosts(int, int)}} and {@link #addOneGhost()} are used to add a new Ghost in the Entity map.
+     */
     private void addGhosts(){
-        for (int i = 0; i< FANTOME_NUMBER; i++){
+        for (int i = 0; i< GHOST_NUMBER; i++){
             addOneGhost();
         }
     }
 
+    /**
+     * @see #addGhosts()
+     */
     private void addGhosts(int x,int y){
-        for(int i=0;i<FANTOME_NUMBER;i++){
+        for(int i = 0; i< GHOST_NUMBER; i++){
             addOneGhost(x,y);
         }
     }
 
+    /**
+     * @see #addGhosts()
+     */
     private void addOneGhost(){
         addOneGhost(r.nextInt(SIZE_X),r.nextInt(SIZE_Y));
     }
 
+    /**
+     * @see #addGhosts()
+     */
     private void addOneGhost(int x,int y){
-        map.put(new Fantome(this,FANTOME_DELAY),new Point(x,y));
+        map.put(new Ghost(this, GHOST_DELAY),new Point(x,y));
     }
 
     public SimplePacMan getPacMan(){
-        for (Entite entite : map.keySet()) {
-            if (entite instanceof SimplePacMan) return (SimplePacMan)entite;
+        for (Entity entity : map.keySet()) {
+            if (entity instanceof SimplePacMan) return (SimplePacMan) entity;
         }
         return null;
     }
 
-    public Map<Entite, Point> getMap() {
+    public Map<Entity, Point> getMap() {
         return map;
     }
 
-    public synchronized void depl(Depl d,Entite e) throws Exception {
+    /**
+     * Moves the entity in the given direction. This method should always be called AFTER the {@link #OkDepl(Depl, Entity)} has been checked with the same parameters.
+     * Note that this method is also checking if PacMan / a Ghost is losing a life.
+     */
+
+    public synchronized void depl(Depl d, Entity e) throws Exception {
         Point p = map.get(e);
         if(d==null) return;
         if(p==null) {
@@ -130,111 +159,117 @@ public class Grille {
             throw new Exception("Invalid entity.");
         }
         switch (d){
-            case HAUT:
+            case UP:
                 if (p.y == 0) {
                     p.y = SIZE_Y-1;
                 } else {
                     p.y--;
                 }
                 break;
-            case BAS:
+            case DOWN:
                 if(p.y+1==SIZE_Y) p.y=0;
                 else p.y++;
                 break;
-            case DROIT:
+            case RIGHT:
                 if(p.x+1==SIZE_X) p.x=0;
                 else p.x++;
                 break;
-            case GAUCHE:
+            case LEFT:
                 if(p.x==0) p.x=SIZE_X-1;
                 else p.x--;
                 break;
         }
         if((getObjDynam(p.x,p.y)==ObjDynam.BONUS || getObjDynam(p.x,p.y)==ObjDynam.POINT )&& e instanceof SimplePacMan) {
             if(getObjDynam(p.x,p.y)==ObjDynam.BONUS){
-                //System.out.println("pacman set invincible !");
                 ((SimplePacMan)e).setInvisible();
             }
-            grilleDynam[p.x][p.y]=null;
+            gridDynam[p.x][p.y]=null;
             nbBonusLeft--;
         }
 
         //Checking if Pacman is losing a life and if a ghost is dying
-        for(Entite entite:map.keySet()){
-            if(map.get(entite)==null) break;
-            Point point = map.get(entite).getLocation();
-            if(point.x==p.x && point.y==p.y && entite.getClass()!=e.getClass()){
+        for(Entity entity :map.keySet()){
+            if(map.get(entity)==null) break;
+            Point point = map.get(entity).getLocation();
+            if(point.x==p.x && point.y==p.y && entity.getClass()!=e.getClass()){
                 if(e instanceof SimplePacMan && !((SimplePacMan) e).isUntouchable()){
                     if(((SimplePacMan) e).isInvisible()){
-                        entite.lives--;
+                        entity.lives--;
                     }
                     else{
                         ((SimplePacMan) e).setUntouchable();
                         e.lives--;
                     }
                 }
-                else if (entite instanceof SimplePacMan && !(((SimplePacMan) entite).isUntouchable())){
-                    if(((SimplePacMan) entite).isInvisible()){
+                else if (entity instanceof SimplePacMan && !(((SimplePacMan) entity).isUntouchable())){
+                    if(((SimplePacMan) entity).isInvisible()){
                         e.lives--;
                     }
                     else{
-                        ((SimplePacMan) entite).setUntouchable();
-                        entite.lives--;
+                        ((SimplePacMan) entity).setUntouchable();
+                        entity.lives--;
                     }
                 }
                 if(e.lives==0){
                     e.stopEntite();
                     map.remove(e);
                 }
-                else if(entite.lives==0){
-                    entite.stopEntite();
-                    map.remove(entite);
+                else if(entity.lives==0){
+                    entity.stopEntite();
+                    map.remove(entity);
                 }
             }
         }
     }
 
 
-    public boolean OkDepl(Depl depl,Entite e) throws Exception {
+    /**
+     * Checks if the entity e can move in the direction given in argument
+     */
+    public boolean OkDepl(Depl depl, Entity e) throws Exception {
         Point p = map.get(e);
         if(depl==null) return false;
         if(p==null) {
             throw new Exception("Invalid entity.");
         }
         switch(depl){
-            case HAUT:
-                if(p.y==0) return isVide(p.x,SIZE_Y-1);
-                return isVide(p.x,p.y-1);
-            case BAS:
-                if(p.y==SIZE_Y-1) return isVide(p.x,0);
-                return isVide(p.x,p.y+1);
-            case DROIT:
-                if(p.x+1==SIZE_X) return isVide(0,p.y);
-                return isVide(p.x+1,p.y);
-            case GAUCHE:
-                if(p.x==0) return isVide(SIZE_X-1,p.y);
-                return isVide(p.x-1,p.y);
+            case UP:
+                if(p.y==0) return isEmpty(p.x,SIZE_Y-1);
+                return isEmpty(p.x,p.y-1);
+            case DOWN:
+                if(p.y==SIZE_Y-1) return isEmpty(p.x,0);
+                return isEmpty(p.x,p.y+1);
+            case RIGHT:
+                if(p.x+1==SIZE_X) return isEmpty(0,p.y);
+                return isEmpty(p.x+1,p.y);
+            case LEFT:
+                if(p.x==0) return isEmpty(SIZE_X-1,p.y);
+                return isEmpty(p.x-1,p.y);
         }
         return false;
     }
 
+    /**
+     * Stops any entity still running in the grid.
+     */
     public void interrupt(){
         if(map==null) return;
-        for(Entite e:map.keySet()){
+        for(Entity e:map.keySet()){
             e.stopEntite();
         }
     }
 
-    private boolean isVide(int x, int y){
-        return getObjStatic(x,y) == ObjStatic.VIDE;
+    //GETTERS AND SETTERS
+    private boolean isEmpty(int x, int y){
+        return getObjStatic(x,y) == ObjStatic.EMPTY;
     }
 
     public ObjStatic getObjStatic(int i, int j) {
-        return grilleObj[i][j];
+        return gridObj[i][j];
     }
 
     public ObjDynam getObjDynam(int i,int j){
-        return grilleDynam[i][j];
+        return gridDynam[i][j];
     }
 
     public int getNbBonusLeft() {
@@ -249,14 +284,10 @@ public class Grille {
         return SIZE_Y;
     }
 
-    public void setNbBonusLeft(int nbBonusLeft) {
-        this.nbBonusLeft = nbBonusLeft;
-    }
-
     public int getNumberOfGhosts(){
         int ret = 0;
-        for(Entite e :map.keySet()){
-            if (e instanceof Fantome) {
+        for(Entity e :map.keySet()){
+            if (e instanceof Ghost) {
                 ret++;
             }
         }
@@ -267,10 +298,10 @@ public class Grille {
     }
 
     public void changeDifficulty(int diff){
-        FANTOME_DELAY=BASE_FANTOME_DELAY-50*(diff-1);
+        GHOST_DELAY =BASE_FANTOME_DELAY-50*(diff-1);
     }
 
-    public void setFANTOME_NUMBER(int fantome_number){
-        FANTOME_NUMBER=fantome_number;
+    public void setGHOST_NUMBER(int fantome_number){
+        GHOST_NUMBER =fantome_number;
     }
 }

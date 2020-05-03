@@ -3,9 +3,8 @@ package Vue;
 import Controller.BindingController;
 import Controller.EventController;
 import Controller.ThreadController;
-import Modele.Grille;
+import Modele.ModelGrid;
 import Modele.SimplePacMan;
-import TasksThreads.EndOfGameTask;
 import javafx.application.Application;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -30,7 +29,7 @@ public class MainVue extends Application {
 		FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("main.fxml"));
 
 		//Init modelGrid (read-only here --> MVC)
-		Grille modelGrid=new Grille(FILENAME);
+		ModelGrid modelGrid=new ModelGrid(FILENAME);
 		int SIZE_X=modelGrid.getSIZE_X();
 		int SIZE_Y=modelGrid.getSIZE_Y();
 

@@ -5,23 +5,28 @@
  */
 package Modele;
 
-import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class SimplePacMan extends Entite {
+/**
+ * A thread used to model the PacMan entity. Inherits of the {@link Entity} class which inherits of {@link Thread}
+ * @see Entity
+ * @see Ghost
+ * @see ModelGrid
+ * @see Controller.ThreadController
+ */
+public class SimplePacMan extends Entity {
     public static int MAX_HEALTH = 3;
-    Random r = new Random();
     private Depl cachedDirection;
     private boolean invisible;
-    private static int INVISIBLE_DELAY=3000;
-    private static int UNTOUCHABLE_DELAY=3000;
+    private final static int INVISIBLE_DELAY=3000;
+    private final static int UNTOUCHABLE_DELAY=3000;
     private boolean untouchable;
     private int timeLeftUntouchable;
     private int timeLeftInvisible;
 
-    public SimplePacMan(Grille grille,int delay){
-        this.grille=grille;
+    public SimplePacMan(ModelGrid modelGrid, int delay){
+        this.modelGrid = modelGrid;
         this.delay=delay;
         direction=null;
         cachedDirection=null;
@@ -37,11 +42,9 @@ public class SimplePacMan extends Entite {
         while(running) { // spm descent dans la grille à chaque pas de temps
             if(timeLeftInvisible<=0 && invisible){
                 invisible=false;
-                //System.out.println("Pacman no longer invisible !");
             }
             if (timeLeftUntouchable <= 0 && untouchable) {
                 untouchable=false;
-               // System.out.println("Pacman no longer untouchable !");
             }
             try {
                 action();
@@ -49,6 +52,7 @@ public class SimplePacMan extends Entite {
                 e.printStackTrace();
             }
             try {
+                //Updates the status for each delay
                 if(invisible)
                     timeLeftInvisible-=delay;
                 if(untouchable)
@@ -61,14 +65,17 @@ public class SimplePacMan extends Entite {
         }
     }
 
+    /**
+     * Moves Pacman in the cachedDirection. If the move is impossible, the direction is set to null.
+     */
     public void action() throws Exception {
-        if(grille.OkDepl(cachedDirection,this)){
+        if(modelGrid.OkDepl(cachedDirection,this)){
             this.direction=cachedDirection;
             this.cachedDirection=null;
-            grille.depl(direction,this);
+            modelGrid.depl(direction,this);
         }
-        else if(grille.OkDepl(direction,this))
-            grille.depl(direction,this);
+        else if(modelGrid.OkDepl(direction,this))
+            modelGrid.depl(direction,this);
         else{//Impossible to go in any direction
             this.direction=null;
         }
@@ -80,10 +87,8 @@ public class SimplePacMan extends Entite {
         new Thread(this).start();
     }
 
-    public void setDirection(Depl depl){
-        this.direction=depl;
-    }
 
+    // GETTERS AND SETTERS
     public void setCachedDirection(Depl cachedDirection) {
         this.cachedDirection = cachedDirection;
     }

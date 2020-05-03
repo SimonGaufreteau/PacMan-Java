@@ -3,9 +3,16 @@ package Modele;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Fantome extends Entite {
-    public Fantome(Grille grille,int delay){
-        this.grille=grille;
+/**
+ * A simple class used to model a Ghost in a PacMan game. These entities are updated each DELAY and are stopped at the end of the game.
+ * @see Entity
+ * @see SimplePacMan
+ * @see ModelGrid
+ * @see Controller.ThreadController
+ */
+public class Ghost extends Entity {
+    public Ghost(ModelGrid modelGrid, int delay){
+        this.modelGrid = modelGrid;
         this.delay=delay;
         this.direction=null;
     }
@@ -14,21 +21,24 @@ public class Fantome extends Entite {
         changeDirection();
     }
 
-    private void changeDirection() throws Exception {
+    /**
+     * The main algorithm used to make the AI of the Ghosts work. This is basically a random move.
+     */
+    private void changeDirection() {
         if(direction==null) direction=Depl.getRandom();
         Depl symetrical = direction.getSymetrical();
         try {
-            if (grille.OkDepl(symetrical, this)) {
+            if (modelGrid.OkDepl(symetrical, this)) {
                 this.direction = symetrical;
-                grille.depl(symetrical, this);
+                modelGrid.depl(symetrical, this);
             } else changeDirectionRecur(direction);
         } catch (Exception ignored){}
     }
 
     private synchronized void changeDirectionRecur(Depl depl) throws Exception{
-        if(grille.OkDepl(depl,this)){
+        if(modelGrid.OkDepl(depl,this)){
             this.direction=depl;
-            grille.depl(depl,this);
+            modelGrid.depl(depl,this);
         }
         else changeDirectionRecur(Depl.getRandom());
 
@@ -50,7 +60,7 @@ public class Fantome extends Entite {
                 e.printStackTrace();
             }
             try {
-                Thread.sleep(delay); // pause
+                Thread.sleep(delay);
             } catch (InterruptedException ex) {
                 Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
             }

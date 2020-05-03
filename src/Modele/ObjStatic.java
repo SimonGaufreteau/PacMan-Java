@@ -1,12 +1,15 @@
 package Modele;
 
+/**
+ * An enum used in the {@link ModelGrid} class to model a static object i.e. a wall or an empty cell.
+ */
 public enum ObjStatic {
-    MUR,VIDE;
+    WALL, EMPTY;
 
     public static ObjStatic getObjFromChar(Character c) {
         if (c == 'W') {
-            return MUR;
+            return WALL;
         }
-        return VIDE;
+        return EMPTY;
     }
 }

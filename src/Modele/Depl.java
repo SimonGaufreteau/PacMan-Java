@@ -2,14 +2,13 @@ package Modele;
 
 import java.util.Random;
 
+/**
+ * An enum class used by the entities to move in the grid.
+ */
 public enum Depl {
-    HAUT,DROIT,BAS,GAUCHE;
+    UP, RIGHT, DOWN, LEFT;
     private static Random r=new Random();
     private static Depl[] vals = values();
-
-    public Depl getNext(){
-        return vals[(this.ordinal()+1) % vals.length];
-    }
 
     public Depl getSymetrical(){
         return vals[(this.ordinal()+(r.nextInt(2)==1?1:3))% vals.length];
