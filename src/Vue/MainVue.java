@@ -18,15 +18,15 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+/**
+ * Main and only vue of the Application. See main.fxml file to see how this vue is constructed.
+ */
 public class MainVue extends Application {
 	public final int BLOCK_SIZE=19; //number of pixels for an image
 	public final String FILENAME="Stages/Stage1.txt";
 
 	@Override
 	public void start(Stage stage) throws Exception {
-
-		//Root node for javafx
-		/*BorderPane root = new BorderPane();*/
 		FXMLLoader fxmlloader = new FXMLLoader(getClass().getResource("main.fxml"));
 
 		//Init modelGrid (read-only here --> MVC)
@@ -47,25 +47,14 @@ public class MainVue extends Application {
 		BorderPane root = fxmlloader.load();
 
 
+		//Setting the menus event to a pre-built controller
 		ObservableList<Menu> menus = ((MenuBar)(root.getTop())).getMenus();
 		eventController.setMenus(menus);
 
 		//Setting the binds
 		eventController.setBindings(root);
 
-
-		//binding the bottom text to the number of lives left
-		/*Text text= (Text) root.getBottom();
-		LivesTask livesTask=threadController.getLivesTask();
-		text.textProperty().bind(livesTask.messageProperty());
-		text.setFont(Font.font("Verdana",BLOCK_SIZE-1));
-		text.setFill(Color.BLACK);
-
-
-		new Thread(livesTask).start();
-		root.setBottom(text);*/
-
-		stage.setResizable(true);
+		stage.setResizable(false);
 
 		//Initialising the GridPane containing the actual images
 		GridPane grid = (GridPane) root.getCenter();
@@ -82,6 +71,7 @@ public class MainVue extends Application {
 		}
 
 
+		//Init the healthbar
 		BorderPane bottomPane = (BorderPane)(root.getBottom());
 		GridPane lifeGrid = (GridPane) (bottomPane).getCenter();
 		for(int i=0;i<3;i++){
@@ -92,12 +82,12 @@ public class MainVue extends Application {
 			lifeGrid.add(imageView,i,0);
 		}
 
+		//Setting the botton textbar for later uses in ThreadController and BindingController
 		Text text = (Text)bottomPane.getBottom();
 		threadController.setEndText(text,bottomPane,BindingController.direction.BOTTOM);
 
 
 		//Adding elements to the root
-		//root.setCenter(grid);
 		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*(BLOCK_SIZE+3));
 
 		//Setting the scene
