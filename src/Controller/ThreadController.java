@@ -6,6 +6,8 @@ import TasksThreads.DisplayThread;
 import TasksThreads.EndOfGameTask;
 import TasksThreads.LivesTask;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
@@ -16,12 +18,17 @@ public class ThreadController {
 	private ArrayList<Thread> threads;
 	private ArrayList<Entite> entites;
 	private Grille modelGrid;
+	private Text text;
+	private BorderPane borderPane;
+	private BindingController.direction paneDirection;
 
 	public ThreadController(Grille modelGrid, ImageView[][] tab, ImageView[] lifetab){
 		resetThreads(tab,modelGrid,lifetab);
 	}
 
 	public void startThreads(){
+		resetTextBinding();
+
 		for(Thread thread:threads){
 			thread.start();
 		}
@@ -53,8 +60,9 @@ public class ThreadController {
 		else livesTask.setPacman(modelGrid.getPacMan());
 		threads.add(new Thread(livesTask));
 		endOfGameTask = new EndOfGameTask(modelGrid,this);
-
 		threads.add(new Thread(endOfGameTask));
+
+
 		entites=new ArrayList<>();
 		entites.addAll(modelGrid.getMap().keySet());
 	}
@@ -81,5 +89,15 @@ public class ThreadController {
 		interruptThreads();
 		livesTask.stopRunning();
 		endOfGameTask.stopRunning();
+	}
+
+	public void setEndText(Text text, BorderPane borderPane,BindingController.direction direction){
+		this.text = text;
+		this.borderPane = borderPane;
+		this.paneDirection = direction;
+	}
+
+	private void resetTextBinding(){
+		BindingController.bindText(text,endOfGameTask,borderPane, paneDirection);
 	}
 }

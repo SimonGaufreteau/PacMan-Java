@@ -93,8 +93,8 @@ public class MainVue extends Application {
 		}
 
 		Text text = (Text)bottomPane.getBottom();
-		EndOfGameTask endOfGameTask=threadController.getEndOfGameTask();
-		BindingController.bindText(text,endOfGameTask,bottomPane, BindingController.direction.BOTTOM);
+		threadController.setEndText(text,bottomPane,BindingController.direction.BOTTOM);
+
 
 		//Adding elements to the root
 		//root.setCenter(grid);
