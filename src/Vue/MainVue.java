@@ -6,7 +6,9 @@ import Controller.ThreadController;
 import Modele.ModelGrid;
 import Modele.SimplePacMan;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -16,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 /**
  * Main and only vue of the Application. See main.fxml file to see how this vue is constructed.
@@ -95,6 +98,11 @@ public class MainVue extends Application {
 
 		//Setting and starting the threads
 		threadController.startThreads();
+
+		stage.setOnCloseRequest(t -> {
+			Platform.exit();
+			System.exit(0);
+		});
 
 		//Showing the stage with the grid on the focus
 		stage.show();
