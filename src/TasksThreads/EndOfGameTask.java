@@ -1,25 +1,28 @@
 package TasksThreads;
 
 import Controller.ThreadController;
-import Modele.Grille;
+import Modele.ModelGrid;
 import javafx.concurrent.Task;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A task used to detect the win/lose conditions. Also used to display the remaining bonuses/ghosts left and the time played for each game.
+ */
 public class EndOfGameTask extends Task<Integer> {
 	private final static String VICTORY_TEXT="You've won";
 	private final static String LOSE_TEXT="You've lost !";
-	private Grille modelGrid;
+	private ModelGrid modelGrid;
 	private AtomicBoolean running;
 	private ThreadController controller;
 
-	public EndOfGameTask(Grille grille, ThreadController threadController){
-		reset(grille, threadController);
+	public EndOfGameTask(ModelGrid modelGrid, ThreadController threadController){
+		reset(modelGrid, threadController);
 	}
 
-	public void reset(Grille grille,ThreadController threadController) {
+	public void reset(ModelGrid modelGrid, ThreadController threadController) {
 		controller = threadController;
-		this.modelGrid = grille;
+		this.modelGrid = modelGrid;
 		running = new AtomicBoolean(false);
 	}
 
@@ -40,7 +43,6 @@ public class EndOfGameTask extends Task<Integer> {
 		else{
 			updateMessage(LOSE_TEXT);
 		}
-
 		updateProgress(1,1);
 		return 0;
 	}

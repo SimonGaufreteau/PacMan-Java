@@ -10,26 +10,30 @@ import java.awt.*;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A simple thread used to update the main grid of game and the health bar.
+ */
 public class DisplayThread extends Task<Void> {
 	private ImageView[][] tab;
 	private ImageView[] lifeTab;
-	private Grille modelGrid;
+	private ModelGrid modelGrid;
 	private AtomicBoolean running = new AtomicBoolean(false);
 	public static final int REFRESH_DELAY = 2;
 	private boolean firstInstance = true;
+
+	//Declaration of the images
 	Image imPM = new Image("Pacman.png");
-	Image imVide = new Image("Vide.png");
-	Image imFond = new Image("fondNoir.png");
-	Image imBrique = new Image("wall.png");
-	Image imFantome = new Image("Fantome.jpg");
+	Image imEmpty = new Image("Empty.png");
+	Image imBG = new Image("fondNoir.png");
+	Image imWall = new Image("wall.png");
+	Image imGhost = new Image("Ghost.jpg");
 	Image imPoint = new Image("point.png");
 	Image imBigPoint = new Image("Big-point.png");
 	Image imHeart = new Image("pixel_heart_19.png");
 	Image imStrong = new Image("pacman-strong.png");
-	Image imUnto = new Image("pacman-untouchable.png");
+	Image imUntouchable = new Image("pacman-untouchable.png");
 
-	//Use init if you want a safe init of the Observer, user reset if you want to reset the grid / tab;
-	public DisplayThread(ImageView[][] tab, Grille modelGrid,ImageView[] lifeTab) {
+	public DisplayThread(ImageView[][] tab, ModelGrid modelGrid, ImageView[] lifeTab) {
 		if (modelGrid == null) throw new NullPointerException();
 		this.tab = tab;
 		this.lifeTab=lifeTab;
@@ -48,10 +52,10 @@ public class DisplayThread extends Task<Void> {
 				//Updating the background images
 				for (int i = 0; i < SIZE_X; i++) {
 					for (int j = 0; j < SIZE_Y; j++) {
-						if (modelGrid.getObjStatic(i, j) == ObjStatic.MUR)
-							tab[i][j].setImage(imBrique);
+						if (modelGrid.getObjStatic(i, j) == ObjStatic.WALL)
+							tab[i][j].setImage(imWall);
 						else {
-							tab[i][j].setImage(imFond);
+							tab[i][j].setImage(imBG);
 							if (modelGrid.getObjDynam(i, j) == ObjDynam.POINT) tab[i][j].setImage(imPoint);
 							else if (modelGrid.getObjDynam(i, j) == ObjDynam.BONUS) tab[i][j].setImage(imBigPoint);
 						}
@@ -59,32 +63,31 @@ public class DisplayThread extends Task<Void> {
 
 				}
 				//Drawing Entities
-				Map<Entite, Point> map = modelGrid.getMap();
-				for (Entite e : map.keySet()) {
+				Map<Entity, Point> map = modelGrid.getMap();
+				for (Entity e : map.keySet()) {
 					Point point = map.get(e);
 					if (e instanceof SimplePacMan){
 						if(((SimplePacMan) e).isInvisible())
 							tab[point.x][point.y].setImage(imStrong);
 						else if (((SimplePacMan) e).isUntouchable()){
-							tab[point.x][point.y].setImage(imUnto);
+							tab[point.x][point.y].setImage(imUntouchable);
 						}
 						else
 							tab[point.x][point.y].setImage(imPM);
 					}
-					else if (e instanceof Fantome)
-						tab[point.x][point.y].setImage(imFantome);
+					else if (e instanceof Ghost)
+						tab[point.x][point.y].setImage(imGhost);
 				}
 
-				//Drawing life
+				//Drawing lives
 				int lives;
 				if(modelGrid.getPacMan()==null) lives=0;
 				else  lives = modelGrid.getPacMan().getLives();
-				//System.out.println("Lives : "+lives);
 				for(int i=0;i<SimplePacMan.MAX_HEALTH;i++) {
 					if (i < lives)
 						lifeTab[i].setImage(imHeart);
 					else
-						lifeTab[i].setImage(imVide);
+						lifeTab[i].setImage(imEmpty);
 				}
 			});
 			if (firstInstance) {
@@ -93,7 +96,6 @@ public class DisplayThread extends Task<Void> {
 			try {
 				Thread.sleep(REFRESH_DELAY);
 			} catch (InterruptedException e) {
-				//System.out.println("Thread stopped.");
 				return null;
 			}
 		}
@@ -105,7 +107,4 @@ public class DisplayThread extends Task<Void> {
 		running.set(false);
 	}
 
-	public boolean isFirstInstance() {
-		return firstInstance;
-	}
 }

@@ -5,6 +5,13 @@ import javafx.concurrent.Task;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * A task used to display the remaining lives left in a String.
+ * @deprecated Replaced by the {@link DisplayThread} which displays images instead of text.
+ * Because this class can still be useful for terminal-display applications, it will remain in the project.
+ *
+ */
+@Deprecated
 public class LivesTask extends Task<String> {
 	SimplePacMan simplePacMan;
 	private AtomicBoolean running=new AtomicBoolean(false);
