@@ -24,7 +24,7 @@ public class DisplayThread extends Task<Void> {
 	//Declaration of the images
 	Image imPM = new Image("Pacman.png");
 	Image imEmpty = new Image("Empty.png");
-	Image imBG = new Image("fondNoir.png");
+	Image imBG = new Image("BlackBG.png");
 	Image imWall = new Image("wall.png");
 	Image imGhost = new Image("Ghost.jpg");
 	Image imPoint = new Image("point.png");

@@ -23,9 +23,9 @@ public class ModelGrid {
     private int SIZE_Y;
     private Random r = new Random();
     private final int BASE_PACMAN_DELAY=100;
-    private final int BASE_FANTOME_DELAY=200;
+    private final int BASE_GHOST_DELAY =200;
     private int PACMAN_DELAY=BASE_PACMAN_DELAY;
-    private int GHOST_DELAY =BASE_FANTOME_DELAY;
+    private int GHOST_DELAY = BASE_GHOST_DELAY;
     private int GHOST_NUMBER =4;
 
     private int GHOST_XPOS;
@@ -211,11 +211,11 @@ public class ModelGrid {
                     }
                 }
                 if(e.lives==0){
-                    e.stopEntite();
+                    e.stopEntity();
                     map.remove(e);
                 }
                 else if(entity.lives==0){
-                    entity.stopEntite();
+                    entity.stopEntity();
                     map.remove(entity);
                 }
             }
@@ -255,7 +255,7 @@ public class ModelGrid {
     public void interrupt(){
         if(map==null) return;
         for(Entity e:map.keySet()){
-            e.stopEntite();
+            e.stopEntity();
         }
     }
 
@@ -298,10 +298,10 @@ public class ModelGrid {
     }
 
     public void changeDifficulty(int diff){
-        GHOST_DELAY =BASE_FANTOME_DELAY-50*(diff-1);
+        GHOST_DELAY = BASE_GHOST_DELAY -50*(diff-1);
     }
 
-    public void setGHOST_NUMBER(int fantome_number){
-        GHOST_NUMBER =fantome_number;
+    public void setGHOST_NUMBER(int ghost_number){
+        GHOST_NUMBER =ghost_number;
     }
 }

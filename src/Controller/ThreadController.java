@@ -51,7 +51,7 @@ public class ThreadController {
 			thread.interrupt();
 		}
 		for(Entity e: entities){
-			e.stopEntite();
+			e.stopEntity();
 		}
 	}
 

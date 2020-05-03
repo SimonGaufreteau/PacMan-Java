@@ -39,7 +39,7 @@ public class SimplePacMan extends Entity {
     @Override
     public void run() {
         running=true;
-        while(running) { // spm descent dans la grille à chaque pas de temps
+        while(running) {
             if(timeLeftInvisible<=0 && invisible){
                 invisible=false;
             }

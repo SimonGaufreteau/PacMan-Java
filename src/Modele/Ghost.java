@@ -26,11 +26,11 @@ public class Ghost extends Entity {
      */
     private void changeDirection() {
         if(direction==null) direction=Depl.getRandom();
-        Depl symetrical = direction.getSymetrical();
+        Depl symmetrical = direction.getSymmetrical();
         try {
-            if (modelGrid.OkDepl(symetrical, this)) {
-                this.direction = symetrical;
-                modelGrid.depl(symetrical, this);
+            if (modelGrid.OkDepl(symmetrical, this)) {
+                this.direction = symmetrical;
+                modelGrid.depl(symmetrical, this);
             } else changeDirectionRecur(direction);
         } catch (Exception ignored){}
     }

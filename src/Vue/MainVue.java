@@ -81,7 +81,7 @@ public class MainVue extends Application {
 			lifeGrid.add(imageView,i,0);
 		}
 
-		//Setting the botton textbar for later uses in ThreadController and BindingController
+		//Setting the bottom textbar for later uses in ThreadController and BindingController
 		Text text = (Text)bottomPane.getBottom();
 		threadController.setEndText(text,bottomPane,BindingController.direction.BOTTOM);
 

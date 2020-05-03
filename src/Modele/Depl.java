@@ -10,7 +10,7 @@ public enum Depl {
     private static Random r=new Random();
     private static Depl[] vals = values();
 
-    public Depl getSymetrical(){
+    public Depl getSymmetrical(){
         return vals[(this.ordinal()+(r.nextInt(2)==1?1:3))% vals.length];
     }
 

@@ -12,7 +12,7 @@ public abstract class Entity extends Thread {
     protected boolean running=false;
     protected int lives=1;
 
-    public void stopEntite(){
+    public void stopEntity(){
         running=false;
     }
 
