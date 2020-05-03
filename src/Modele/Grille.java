@@ -152,7 +152,7 @@ public class Grille {
         }
         if((getObjDynam(p.x,p.y)==ObjDynam.BONUS || getObjDynam(p.x,p.y)==ObjDynam.POINT )&& e instanceof SimplePacMan) {
             if(getObjDynam(p.x,p.y)==ObjDynam.BONUS){
-                System.out.println("pacman set invisible !");
+                //System.out.println("pacman set invincible !");
                 ((SimplePacMan)e).setInvisible();
             }
             grilleDynam[p.x][p.y]=null;

@@ -14,7 +14,6 @@ public class LivesTask extends Task<String> {
 	@Override
 	protected String call() {
 		running.set(true);
-		System.out.println("Called the lives task");
 		while(running.get()){
 			updateMessage(simplePacMan.getLives()+" lives left !");
 		}

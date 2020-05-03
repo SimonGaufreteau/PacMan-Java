@@ -7,7 +7,7 @@ import javafx.concurrent.Task;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EndOfGameTask extends Task<Integer> {
-	private final static String VICTORY_TEXT="You've won !";
+	private final static String VICTORY_TEXT="You've won";
 	private final static String LOSE_TEXT="You've lost !";
 	private Grille modelGrid;
 	private AtomicBoolean running;
@@ -26,14 +26,16 @@ public class EndOfGameTask extends Task<Integer> {
 	@Override
 	protected Integer call(){
 		running.set(true);
-		System.out.println("test");
 		updateMessage("Waiting for the results...");
+		long time = System.currentTimeMillis();
 		while(modelGrid.getNbBonusLeft()!=0 && modelGrid.getPacMan().hasLives() && modelGrid.hasGhosts()){
+			updateMessage("Eat "+modelGrid.getNbBonusLeft()+" points or kill the "+modelGrid.getNumberOfGhosts()+" remaining ghosts to win ! (Time : "+(System.currentTimeMillis()-time)/1000+"s)");
 			if(!running.get()) break;
 		}
 		controller.stopGame();
-		if(modelGrid.getNbBonusLeft()==0){
-			updateMessage(VICTORY_TEXT);
+		time = (System.currentTimeMillis()-time)/1000;
+		if(modelGrid.getNbBonusLeft()==0 || modelGrid.getNumberOfGhosts()==0){
+			updateMessage(VICTORY_TEXT+" in "+time+" seconds !");
 		}
 		else{
 			updateMessage(LOSE_TEXT);

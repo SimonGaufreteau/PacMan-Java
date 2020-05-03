@@ -37,11 +37,11 @@ public class SimplePacMan extends Entite {
         while(running) { // spm descent dans la grille à chaque pas de temps
             if(timeLeftInvisible<=0 && invisible){
                 invisible=false;
-                System.out.println("Pacman no longer invisible !");
+                //System.out.println("Pacman no longer invisible !");
             }
             if (timeLeftUntouchable <= 0 && untouchable) {
                 untouchable=false;
-                System.out.println("Pacman no longer untouchable !");
+               // System.out.println("Pacman no longer untouchable !");
             }
             try {
                 action();
