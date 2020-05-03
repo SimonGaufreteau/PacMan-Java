@@ -7,7 +7,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 public class BindingController {
-	public enum direction {TOP,RIGHT,BOTTOM,LEFT};
+	public enum direction {TOP,RIGHT,BOTTOM,LEFT}
+
 	public static void bindText(Text text, Task task, BorderPane pane,direction direction){
 		text.setVisible(true);
 		text.textProperty().bind(task.messageProperty());

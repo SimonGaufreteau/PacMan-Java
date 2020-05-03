@@ -1,7 +1,7 @@
 package Controller;
 
 import Modele.Depl;
-import Modele.Grille;
+import Modele.ModelGrid;
 import Modele.SimplePacMan;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
@@ -15,15 +15,19 @@ import javafx.scene.layout.BorderPane;
 
 import java.util.Iterator;
 
+/**
+ * Controls both the key events and the menu described in the main.fxml file.
+ * @see Vue.MainVue
+ */
 public class EventController {
 	private SimplePacMan spm;
-	private Grille modelGrid;
+	private ModelGrid modelGrid;
 	private ImageView[][] tab;
 	private ThreadController threadController;
 	private ImageView[] lifetab;
 	private ObservableList<Menu> diffs;
 
-	public EventController(Grille modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
+	public EventController(ModelGrid modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
 		this.spm=modelGrid.getPacMan();
 		this.threadController=threadController;
 		this.modelGrid=modelGrid;
@@ -35,6 +39,10 @@ public class EventController {
 		spm=modelGrid.getPacMan();
 	}
 
+	/**
+	 * Sets the bindings to play the game. The 4 direction keys are binding to the PacMan entity.
+	 * @param root The BorderPane used to display the game.
+	 */
 	public void setBindings(BorderPane root){
 		root.setOnKeyPressed(event -> {
 			try {
@@ -70,24 +78,27 @@ public class EventController {
 	}
 
 	public void moveLeft(){
-		spm.setCachedDirection(Depl.GAUCHE);
+		spm.setCachedDirection(Depl.LEFT);
 	}
 
 	public void moveRight(){
-		spm.setCachedDirection(Depl.DROIT);
+		spm.setCachedDirection(Depl.RIGHT);
 	}
 
 	public void moveUp(){
-		spm.setCachedDirection(Depl.HAUT);
+		spm.setCachedDirection(Depl.UP);
 	}
 
 	public void moveDown(){
-		spm.setCachedDirection(Depl.BAS);
+		spm.setCachedDirection(Depl.DOWN);
 	}
 
 
+	/**
+	 * Restart a game with the parameter selected in the menus.
+	 */
 	public void handleRestart(ActionEvent actionEvent) {
-		modelGrid.setFANTOME_NUMBER(getGhosts());
+		modelGrid.setGHOST_NUMBER(getGhosts());
 		modelGrid.changeDifficulty(getDifficulty());
 		threadController.interruptThreads();
 			threadController.resetGrid();
@@ -97,12 +108,18 @@ public class EventController {
 			threadController.startThreads();
 	}
 
+	/**
+	 * Stops the game and closes the window.
+	 */
 	public void handleStop(ActionEvent actionEvent){
 		threadController.stopAll();
 		Platform.exit();
 
 	}
 
+	/**
+	 * Returns the first difficulty selected in the second tab of the application. See the main.fxml file for more information.
+	 */
 	private int getDifficulty(){
 		Iterator<MenuItem> it = diffs.get(1).getItems().iterator();
 		int i=1;
@@ -116,11 +133,13 @@ public class EventController {
 		return 1;
 	}
 
+	/**
+	 * Returns the number of ghosts selected in the slider in the third menu. See the main.fxml file for more information.
+	 */
 	private int getGhosts(){
 		ObservableList<MenuItem> it = diffs.get(2).getItems();
 		Slider slider = (Slider)it.get(0).getGraphic();
-		int nb =(int)slider.getValue();
-		return nb;
+		return (int)slider.getValue();
 	}
 
 }
