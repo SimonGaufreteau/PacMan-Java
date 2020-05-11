@@ -120,4 +120,8 @@ public class SimplePacMan extends Entity {
     public int getLives(){
         return lives;
     }
+
+    public Depl getDirection() {
+        return direction;
+    }
 }

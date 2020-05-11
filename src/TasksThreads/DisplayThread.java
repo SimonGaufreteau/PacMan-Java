@@ -64,9 +64,14 @@ public class DisplayThread extends Task<Void> {
 				}
 				//Drawing Entities
 				Map<Entity, Point> map = modelGrid.getMap();
+				int last_rotate;
 				for (Entity e : map.keySet()) {
 					Point point = map.get(e);
-					if (e instanceof SimplePacMan){
+					if (e instanceof Ghost){
+						tab[point.x][point.y].setRotate(0);
+						tab[point.x][point.y].setImage(imGhost);
+					}
+					else if (e instanceof SimplePacMan){
 						if(((SimplePacMan) e).isInvisible())
 							tab[point.x][point.y].setImage(imStrong);
 						else if (((SimplePacMan) e).isUntouchable()){
@@ -74,9 +79,13 @@ public class DisplayThread extends Task<Void> {
 						}
 						else
 							tab[point.x][point.y].setImage(imPM);
+						if(((SimplePacMan) e).getDirection()!=null){
+							last_rotate=90*((SimplePacMan) e).getDirection().ordinal()-90;
+							tab[point.x][point.y].setRotate(last_rotate);
+						}
+
 					}
-					else if (e instanceof Ghost)
-						tab[point.x][point.y].setImage(imGhost);
+
 				}
 
 				//Drawing lives
