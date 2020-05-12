@@ -14,12 +14,6 @@ title __PACMAN-JAVA's Class Diagram__\n
   }
   
 
-  namespace Controller {
-    class Modele.ThreadController {
-    }
-  }
-  
-
   namespace Modele {
     enum Depl {
     }
@@ -62,50 +56,52 @@ title __PACMAN-JAVA's Class Diagram__\n
   }
   
 
-  namespace VueTasks {
-    class VueTasks.DisplayThread {
-    }
-  }
-  
-
-  namespace VueTasks {
-    class VueTasks.EndOfGameTask {
-    }
-  }
-  
-
-  namespace VueTasks {
-    class VueTasks.LivesTask {
-    }
-  }
-  
-
   namespace Vue {
     class Vue.MainVue {
     }
   }
   
 
+  namespace Vue {
+    namespace asks {
+      class VueTasks.DisplayThread {
+      }
+    }
+  }
+  
+
+  namespace Vue {
+    namespace asks {
+      class VueTasks.EndOfGameTask {
+      }
+    }
+  }
+  
+
+  namespace Vue {
+    namespace asks {
+      class VueTasks.LivesTask {
+      }
+    }
+  }
+  
+
   Controller.EventController o-- Modele.ModelGrid : modelGrid
   Controller.EventController o-- Modele.SimplePacMan : spm
-  Controller.EventController o-- Modele.ThreadController : threadController
-  Modele.ThreadController o-- VueTasks.DisplayThread : displayThread
-  Modele.ThreadController o-- VueTasks.EndOfGameTask : endOfGameTask
-  Modele.ThreadController o-- Modele.ModelGrid : modelGrid
-  Modele.ThreadController o-- Controller.BindingController.direction : paneDirection
   Modele.Entity o-- Modele.Depl : direction
   Modele.Entity o-- Modele.ModelGrid : modelGrid
   Modele.Ghost -up-|> Modele.Entity
+  Modele.ModelGrid .up.|> java.lang.Runnable
+  Modele.ModelGrid o-- Modele.SimplePacMan : spm
   Modele.SimplePacMan -up-|> Modele.Entity
   Modele.SimplePacMan o-- Modele.Depl : cachedDirection
+  Vue.MainVue -up-|> javafx.application.Application
   VueTasks.DisplayThread -up-|> javafx.concurrent.Task
   VueTasks.DisplayThread o-- Modele.ModelGrid : modelGrid
   VueTasks.EndOfGameTask -up-|> javafx.concurrent.Task
-  VueTasks.EndOfGameTask o-- Modele.ThreadController : controller
   VueTasks.EndOfGameTask o-- Modele.ModelGrid : modelGrid
   VueTasks.LivesTask -up-|> javafx.concurrent.Task
   VueTasks.LivesTask o-- Modele.SimplePacMan : simplePacMan
-  Vue.MainVue -up-|> javafx.application.Application
 
 
 right footer

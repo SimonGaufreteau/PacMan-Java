@@ -22,8 +22,6 @@ title __CONTROLLER's Class Diagram__\n
   namespace Controller {
     class Controller.EventController {
         - diffs : ObservableList<Menu>
-        - lifetab : ImageView[]
-        - tab : ImageView[][]
         + EventController()
         + handleRestart()
         + handleStop()
@@ -40,33 +38,9 @@ title __CONTROLLER's Class Diagram__\n
   }
   
 
-  namespace Controller {
-    class Modele.ThreadController {
-        - borderPane : BorderPane
-        - entities : ArrayList<Entity>
-        - text : Text
-        - threads : ArrayList<Thread>
-        + ThreadController()
-        + interruptThreads()
-        + resetGrid()
-        + resetThreads()
-        + setEndText()
-        + startThreads()
-        + stopAll()
-        + stopGame()
-        - resetTextBinding()
-    }
-  }
-  
-
   Controller.BindingController +-down- Controller.BindingController.direction
   Controller.EventController o-- Modele.ModelGrid : modelGrid
   Controller.EventController o-- Modele.SimplePacMan : spm
-  Controller.EventController o-- Modele.ThreadController : threadController
-  Modele.ThreadController o-- VueTasks.DisplayThread : displayThread
-  Modele.ThreadController o-- VueTasks.EndOfGameTask : endOfGameTask
-  Modele.ThreadController o-- Modele.ModelGrid : modelGrid
-  Modele.ThreadController o-- Controller.BindingController.direction : paneDirection
 
 
 right footer

@@ -18,7 +18,7 @@ title __MODELE's Class Diagram__\n
     abstract class Modele.Entity {
         # delay : int
         # lives : int
-        # running : boolean
+        # running : AtomicBoolean
         {abstract} + start()
         + stopEntity()
     }
@@ -47,7 +47,6 @@ title __MODELE's Class Diagram__\n
         - GHOST_NUMBER : int
         - GHOST_XPOS : int
         - GHOST_YPOS : int
-        - PACMAN_DELAY : int
         - PCM_XPOS : int
         - PCM_YPOS : int
         - SIZE_X : int
@@ -70,10 +69,13 @@ title __MODELE's Class Diagram__\n
         + getSIZE_X()
         + getSIZE_Y()
         + hasGhosts()
-        + interrupt()
+        + isRunning()
         + reset()
         + reset()
+        + run()
         + setGHOST_NUMBER()
+        + startEntities()
+        + stopEntities()
         - addGhosts()
         - addGhosts()
         - addOneGhost()
@@ -104,6 +106,7 @@ title __MODELE's Class Diagram__\n
     class Modele.SimplePacMan {
         {static} + MAX_HEALTH : int
         {static} - INVISIBLE_DELAY : int
+        {static} - PACMAN_DELAY : int
         {static} - UNTOUCHABLE_DELAY : int
         - invisible : boolean
         - timeLeftInvisible : int
@@ -111,10 +114,13 @@ title __MODELE's Class Diagram__\n
         - untouchable : boolean
         + SimplePacMan()
         + action()
+        + getDirection()
         + getLives()
         + hasLives()
         + isInvisible()
         + isUntouchable()
+        + reset()
+        + reset()
         + run()
         + setCachedDirection()
         + setInvisible()
@@ -127,6 +133,8 @@ title __MODELE's Class Diagram__\n
   Modele.Entity o-- Modele.Depl : direction
   Modele.Entity o-- Modele.ModelGrid : modelGrid
   Modele.Ghost -up-|> Modele.Entity
+  Modele.ModelGrid .up.|> java.lang.Runnable
+  Modele.ModelGrid o-- Modele.SimplePacMan : spm
   Modele.SimplePacMan -up-|> Modele.Entity
   Modele.SimplePacMan o-- Modele.Depl : cachedDirection
 
