@@ -10,7 +10,6 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.RadioMenuItem;
 import javafx.scene.control.Slider;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 
 import java.util.Iterator;
@@ -22,17 +21,11 @@ import java.util.Iterator;
 public class EventController {
 	private SimplePacMan spm;
 	private ModelGrid modelGrid;
-	private ImageView[][] tab;
-	private ThreadController threadController;
-	private ImageView[] lifetab;
 	private ObservableList<Menu> diffs;
 
-	public EventController(ModelGrid modelGrid, ThreadController threadController, ImageView[][] tab, ImageView[] lifetab) {
+	public EventController(ModelGrid modelGrid) {
 		this.spm=modelGrid.getPacMan();
-		this.threadController=threadController;
 		this.modelGrid=modelGrid;
-		this.tab=tab;
-		this.lifetab = lifetab;
 	}
 
 	private void reset(){
@@ -97,24 +90,21 @@ public class EventController {
 	/**
 	 * Restart a game with the parameter selected in the menus.
 	 */
-	public void handleRestart(ActionEvent actionEvent) {
+	public void handleRestart(ActionEvent actionEvent) throws Exception {
+		modelGrid.stopEntities();
 		modelGrid.setGHOST_NUMBER(getGhosts());
 		modelGrid.changeDifficulty(getDifficulty());
-		threadController.interruptThreads();
-			threadController.resetGrid();
-			reset();
-
-			threadController.resetThreads(tab,modelGrid,lifetab);
-			threadController.startThreads();
+		reset();
+		modelGrid.reset();
+		modelGrid.startEntities();
 	}
 
 	/**
 	 * Stops the game and closes the window.
 	 */
 	public void handleStop(ActionEvent actionEvent){
-		threadController.stopAll();
 		Platform.exit();
-
+		System.exit(0);
 	}
 
 	/**

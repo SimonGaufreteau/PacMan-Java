@@ -13,7 +13,6 @@ import java.util.logging.Logger;
  * @see Entity
  * @see Ghost
  * @see ModelGrid
- * @see Controller.ThreadController
  */
 public class SimplePacMan extends Entity {
     public static int MAX_HEALTH = 3;
@@ -21,13 +20,22 @@ public class SimplePacMan extends Entity {
     private boolean invisible;
     private final static int INVISIBLE_DELAY=3000;
     private final static int UNTOUCHABLE_DELAY=3000;
+    private final static int PACMAN_DELAY=100;
     private boolean untouchable;
     private int timeLeftUntouchable;
     private int timeLeftInvisible;
 
-    public SimplePacMan(ModelGrid modelGrid, int delay){
+    public SimplePacMan(ModelGrid modelGrid){
+        this.delay=PACMAN_DELAY;
+        reset(modelGrid);
+    }
+
+    public void reset() {
+        reset(modelGrid);
+    }
+
+    public void reset(ModelGrid modelGrid){
         this.modelGrid = modelGrid;
-        this.delay=delay;
         direction=null;
         cachedDirection=null;
         lives=MAX_HEALTH;
@@ -36,10 +44,11 @@ public class SimplePacMan extends Entity {
         timeLeftUntouchable=0;
         untouchable=false;
     }
+
     @Override
-    public void run() {
-        running=true;
-        while(running) {
+    public synchronized void run() {
+        running.set(true);
+        while(running.get()) {
             if(timeLeftInvisible<=0 && invisible){
                 invisible=false;
             }
@@ -61,7 +70,6 @@ public class SimplePacMan extends Entity {
             } catch (InterruptedException ex) {
                 Logger.getLogger(SimplePacMan.class.getName()).log(Level.SEVERE, null, ex);
             }
-
         }
     }
 
@@ -124,4 +132,6 @@ public class SimplePacMan extends Entity {
     public Depl getDirection() {
         return direction;
     }
+
+
 }

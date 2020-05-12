@@ -53,7 +53,7 @@ title __TASKSTHREADS's Class Diagram__\n
   TasksThreads.DisplayThread -up-|> javafx.concurrent.Task
   TasksThreads.DisplayThread o-- Modele.ModelGrid : modelGrid
   TasksThreads.EndOfGameTask -up-|> javafx.concurrent.Task
-  TasksThreads.EndOfGameTask o-- Controller.ThreadController : controller
+  TasksThreads.EndOfGameTask o-- Modele.ThreadController : controller
   TasksThreads.EndOfGameTask o-- Modele.ModelGrid : modelGrid
   TasksThreads.LivesTask -up-|> javafx.concurrent.Task
   TasksThreads.LivesTask o-- Modele.SimplePacMan : simplePacMan

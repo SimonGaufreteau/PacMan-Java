@@ -8,7 +8,6 @@ import java.util.logging.Logger;
  * @see Entity
  * @see SimplePacMan
  * @see ModelGrid
- * @see Controller.ThreadController
  */
 public class Ghost extends Entity {
     public Ghost(ModelGrid modelGrid, int delay){
@@ -52,8 +51,8 @@ public class Ghost extends Entity {
 
     @Override
     public void run() {
-        running=true;
-        while(running){
+        running.set(true);
+        while(running.get()){
             try {
                 action();
             } catch (Exception e) {

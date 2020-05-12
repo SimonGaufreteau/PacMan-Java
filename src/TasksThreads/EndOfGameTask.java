@@ -1,6 +1,5 @@
 package TasksThreads;
 
-import Controller.ThreadController;
 import Modele.ModelGrid;
 import javafx.concurrent.Task;
 
@@ -14,14 +13,12 @@ public class EndOfGameTask extends Task<Integer> {
 	private final static String LOSE_TEXT="You've lost !";
 	private ModelGrid modelGrid;
 	private AtomicBoolean running;
-	private ThreadController controller;
 
-	public EndOfGameTask(ModelGrid modelGrid, ThreadController threadController){
-		reset(modelGrid, threadController);
+	public EndOfGameTask(ModelGrid modelGrid){
+		reset(modelGrid);
 	}
 
-	public void reset(ModelGrid modelGrid, ThreadController threadController) {
-		controller = threadController;
+	public void reset(ModelGrid modelGrid) {
 		this.modelGrid = modelGrid;
 		running = new AtomicBoolean(false);
 	}
@@ -29,19 +26,21 @@ public class EndOfGameTask extends Task<Integer> {
 	@Override
 	protected Integer call(){
 		running.set(true);
-		updateMessage("Waiting for the results...");
-		long time = System.currentTimeMillis();
-		while(modelGrid.getNbBonusLeft()!=0 && modelGrid.getPacMan().hasLives() && modelGrid.hasGhosts()){
-			updateMessage("Eat "+modelGrid.getNbBonusLeft()+" points or kill the "+modelGrid.getNumberOfGhosts()+" remaining ghosts to win ! (Time : "+(System.currentTimeMillis()-time)/1000+"s)");
-			if(!running.get()) break;
-		}
-		controller.stopGame();
-		time = (System.currentTimeMillis()-time)/1000;
-		if(modelGrid.getNbBonusLeft()==0 || modelGrid.getNumberOfGhosts()==0){
-			updateMessage(VICTORY_TEXT+" in "+time+" seconds !");
-		}
-		else{
-			updateMessage(LOSE_TEXT);
+		long lastFinishedTime=0;
+		while (running.get()){
+			long time = System.currentTimeMillis();
+			while(modelGrid.isFinished()){
+				lastFinishedTime = (System.currentTimeMillis() - time) / 1000;
+				updateMessage("Eat "+modelGrid.getNbBonusLeft()+" points or kill the "+modelGrid.getNumberOfGhosts()+" remaining ghosts to win ! (Time : "+lastFinishedTime+"s)");
+				if(!running.get()) break;
+			}
+			modelGrid.stopEntities();
+			if(modelGrid.getNbBonusLeft()==0 || modelGrid.getNumberOfGhosts()==0){
+				updateMessage(VICTORY_TEXT+" in "+lastFinishedTime+" seconds !");
+			}
+			else{
+				updateMessage(LOSE_TEXT);
+			}
 		}
 		updateProgress(1,1);
 		return 0;
@@ -49,5 +48,9 @@ public class EndOfGameTask extends Task<Integer> {
 
 	public void stopRunning(){
 		running.set(false);
+	}
+
+	public void startRunning(){
+		running.set(true);
 	}
 }

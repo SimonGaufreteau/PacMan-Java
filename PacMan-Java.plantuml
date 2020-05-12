@@ -15,7 +15,7 @@ title __PACMAN-JAVA's Class Diagram__\n
   
 
   namespace Controller {
-    class Controller.ThreadController {
+    class Modele.ThreadController {
     }
   }
   
@@ -88,11 +88,11 @@ title __PACMAN-JAVA's Class Diagram__\n
 
   Controller.EventController o-- Modele.ModelGrid : modelGrid
   Controller.EventController o-- Modele.SimplePacMan : spm
-  Controller.EventController o-- Controller.ThreadController : threadController
-  Controller.ThreadController o-- TasksThreads.DisplayThread : displayThread
-  Controller.ThreadController o-- TasksThreads.EndOfGameTask : endOfGameTask
-  Controller.ThreadController o-- Modele.ModelGrid : modelGrid
-  Controller.ThreadController o-- Controller.BindingController.direction : paneDirection
+  Controller.EventController o-- Modele.ThreadController : threadController
+  Modele.ThreadController o-- TasksThreads.DisplayThread : displayThread
+  Modele.ThreadController o-- TasksThreads.EndOfGameTask : endOfGameTask
+  Modele.ThreadController o-- Modele.ModelGrid : modelGrid
+  Modele.ThreadController o-- Controller.BindingController.direction : paneDirection
   Modele.Entity o-- Modele.Depl : direction
   Modele.Entity o-- Modele.ModelGrid : modelGrid
   Modele.Ghost -up-|> Modele.Entity
@@ -101,7 +101,7 @@ title __PACMAN-JAVA's Class Diagram__\n
   TasksThreads.DisplayThread -up-|> javafx.concurrent.Task
   TasksThreads.DisplayThread o-- Modele.ModelGrid : modelGrid
   TasksThreads.EndOfGameTask -up-|> javafx.concurrent.Task
-  TasksThreads.EndOfGameTask o-- Controller.ThreadController : controller
+  TasksThreads.EndOfGameTask o-- Modele.ThreadController : controller
   TasksThreads.EndOfGameTask o-- Modele.ModelGrid : modelGrid
   TasksThreads.LivesTask -up-|> javafx.concurrent.Task
   TasksThreads.LivesTask o-- Modele.SimplePacMan : simplePacMan

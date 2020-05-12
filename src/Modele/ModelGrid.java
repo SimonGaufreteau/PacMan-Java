@@ -1,6 +1,6 @@
 package Modele;
 
-import java.awt.*;
+import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -15,7 +15,7 @@ import java.util.concurrent.ConcurrentMap;
  * @see ObjDynam
  * @see ObjStatic
  */
-public class ModelGrid {
+public class ModelGrid implements Runnable {
     private ObjStatic[][] gridObj;
     private ObjDynam[][] gridDynam;
     private ConcurrentMap<Entity, Point> map;
@@ -24,7 +24,6 @@ public class ModelGrid {
     private Random r = new Random();
     private final int BASE_PACMAN_DELAY=100;
     private final int BASE_GHOST_DELAY =200;
-    private int PACMAN_DELAY=BASE_PACMAN_DELAY;
     private int GHOST_DELAY = BASE_GHOST_DELAY;
     private int GHOST_NUMBER =4;
 
@@ -36,6 +35,7 @@ public class ModelGrid {
     private int nbBonusLeft;
     private String FILENAME;
 
+    private SimplePacMan spm;
     private final String FILE_REGEX=" \\| ";
 
     public ModelGrid(String filename) throws Exception {
@@ -43,7 +43,7 @@ public class ModelGrid {
     }
 
     public void reset() throws Exception {
-        interrupt();
+        stopEntities();
         reset(FILENAME);
     }
 
@@ -54,7 +54,7 @@ public class ModelGrid {
      * @apiNote This method also generates Entities, the Ghosts will always spawn in the middle of the grid and Pacman at x=y=1. This can be changed with the {@link #PCM_XPOS} and {@link #PCM_YPOS} variables.
      */
     public void reset(String filename) throws Exception {
-        interrupt();
+        stopEntities();
         this.nbBonusLeft=0;
         this.FILENAME=filename;
         FileReader fileReader = new FileReader(new File(filename));
@@ -87,8 +87,12 @@ public class ModelGrid {
         GHOST_YPOS = SIZE_Y/2;
         map=new ConcurrentHashMap<>();
         addGhosts(GHOST_XPOS,GHOST_YPOS);
-        SimplePacMan simplePacMan = new SimplePacMan(this,PACMAN_DELAY);
-        map.put(simplePacMan,new Point(PCM_XPOS,PCM_YPOS));
+
+        if(spm==null)
+            spm = new SimplePacMan(this);
+        else
+            spm.reset();
+        map.put(spm,new Point(PCM_XPOS,PCM_YPOS));
     }
 
     private void getSizeFromLine(String[] splitted) throws Exception {
@@ -136,10 +140,7 @@ public class ModelGrid {
     }
 
     public SimplePacMan getPacMan(){
-        for (Entity entity : map.keySet()) {
-            if (entity instanceof SimplePacMan) return (SimplePacMan) entity;
-        }
-        return null;
+        return spm;
     }
 
     public Map<Entity, Point> getMap() {
@@ -252,12 +253,21 @@ public class ModelGrid {
     /**
      * Stops any entity still running in the grid.
      */
-    public void interrupt(){
+    public void stopEntities(){
         if(map==null) return;
         for(Entity e:map.keySet()){
             e.stopEntity();
         }
     }
+
+    public void startEntities(){
+        if(map==null) return;
+        for(Entity e:map.keySet()){
+            e.start();
+        }
+    }
+
+
 
     //GETTERS AND SETTERS
     private boolean isEmpty(int x, int y){
@@ -304,4 +314,16 @@ public class ModelGrid {
     public void setGHOST_NUMBER(int ghost_number){
         GHOST_NUMBER =ghost_number;
     }
+
+    public boolean isFinished() {
+        return getNbBonusLeft()!=0 && getPacMan().hasLives() && hasGhosts();
+    }
+
+    @Override
+    public void run() {
+        startEntities();
+        while (!isFinished()){}
+        stopEntities();
+    }
+
 }

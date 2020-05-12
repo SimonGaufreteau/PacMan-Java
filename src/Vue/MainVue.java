@@ -2,13 +2,13 @@ package Vue;
 
 import Controller.BindingController;
 import Controller.EventController;
-import Controller.ThreadController;
 import Modele.ModelGrid;
 import Modele.SimplePacMan;
+import TasksThreads.DisplayThread;
+import TasksThreads.EndOfGameTask;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Menu;
@@ -18,7 +18,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 /**
  * Main and only vue of the Application. See main.fxml file to see how this vue is constructed.
@@ -40,11 +39,10 @@ public class MainVue extends Application {
 		ImageView[][] tab = new ImageView[SIZE_X][SIZE_Y];
 		ImageView[] lifetab = new ImageView[SimplePacMan.MAX_HEALTH];
 
-		ThreadController threadController = new ThreadController(modelGrid,tab,lifetab);
 
 
 		//Generating event handler
-		EventController eventController = new EventController(modelGrid,threadController,tab,lifetab);
+		EventController eventController = new EventController(modelGrid);
 		fxmlloader.setController(eventController);
 		BorderPane root = fxmlloader.load();
 
@@ -84,11 +82,6 @@ public class MainVue extends Application {
 			lifeGrid.add(imageView,i,0);
 		}
 
-		//Setting the bottom textbar for later uses in ThreadController and BindingController
-		Text text = (Text)bottomPane.getBottom();
-		threadController.setEndText(text,bottomPane,BindingController.direction.BOTTOM);
-
-
 		//Adding elements to the root
 		Scene scene = new Scene(root, SIZE_X*BLOCK_SIZE, SIZE_Y*(BLOCK_SIZE+3));
 
@@ -97,7 +90,22 @@ public class MainVue extends Application {
 		stage.setScene(scene);
 
 		//Setting and starting the threads
-		threadController.startThreads();
+		modelGrid.startEntities();
+
+		EndOfGameTask endOfGameTask=new EndOfGameTask(modelGrid);
+		endOfGameTask.startRunning();
+		new Thread(endOfGameTask).start();
+
+		//Setting the bottom textbar for later uses in ThreadController and BindingController
+		Text text = (Text)bottomPane.getBottom();
+		BindingController.bindText(text,endOfGameTask,bottomPane, BindingController.direction.BOTTOM);
+
+		//Starting the display thread
+		DisplayThread displayThread=new DisplayThread(tab,modelGrid,lifetab);
+		new Thread(displayThread).start();
+
+
+
 
 		stage.setOnCloseRequest(t -> {
 			Platform.exit();
@@ -107,10 +115,13 @@ public class MainVue extends Application {
 		//Showing the stage with the grid on the focus
 		stage.show();
 		grid.requestFocus();
+
 	}
 
 
 	public static void main(String[] args) {
 		launch(args);
 	}
+
+
 }
