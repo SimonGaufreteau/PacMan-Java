@@ -90,7 +90,7 @@ public class MainVue extends Application {
 		stage.setScene(scene);
 
 		//Setting and starting the threads
-		modelGrid.startEntities();
+		new Thread(modelGrid).start();
 
 		EndOfGameTask endOfGameTask=new EndOfGameTask(modelGrid);
 		endOfGameTask.startRunning();
@@ -103,9 +103,6 @@ public class MainVue extends Application {
 		//Starting the display thread
 		DisplayThread displayThread=new DisplayThread(tab,modelGrid,lifetab);
 		new Thread(displayThread).start();
-
-
-
 
 		stage.setOnCloseRequest(t -> {
 			Platform.exit();

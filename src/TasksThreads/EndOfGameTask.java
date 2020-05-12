@@ -29,12 +29,12 @@ public class EndOfGameTask extends Task<Integer> {
 		long lastFinishedTime=0;
 		while (running.get()){
 			long time = System.currentTimeMillis();
-			while(modelGrid.isFinished()){
+			while(modelGrid.isRunning()){
 				lastFinishedTime = (System.currentTimeMillis() - time) / 1000;
 				updateMessage("Eat "+modelGrid.getNbBonusLeft()+" points or kill the "+modelGrid.getNumberOfGhosts()+" remaining ghosts to win ! (Time : "+lastFinishedTime+"s)");
 				if(!running.get()) break;
 			}
-			modelGrid.stopEntities();
+			//modelGrid.stopEntities();
 			if(modelGrid.getNbBonusLeft()==0 || modelGrid.getNumberOfGhosts()==0){
 				updateMessage(VICTORY_TEXT+" in "+lastFinishedTime+" seconds !");
 			}

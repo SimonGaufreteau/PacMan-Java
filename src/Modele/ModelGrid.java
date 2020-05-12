@@ -315,14 +315,14 @@ public class ModelGrid implements Runnable {
         GHOST_NUMBER =ghost_number;
     }
 
-    public boolean isFinished() {
-        return getNbBonusLeft()!=0 && getPacMan().hasLives() && hasGhosts();
+    public boolean isRunning() {
+        return (getNbBonusLeft()!=0 && getPacMan().hasLives() && hasGhosts());
     }
 
     @Override
     public void run() {
         startEntities();
-        while (!isFinished()){}
+        while (isRunning()){}
         stopEntities();
     }
 

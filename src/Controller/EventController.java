@@ -96,7 +96,7 @@ public class EventController {
 		modelGrid.changeDifficulty(getDifficulty());
 		reset();
 		modelGrid.reset();
-		modelGrid.startEntities();
+		new Thread(modelGrid).start();
 	}
 
 	/**
