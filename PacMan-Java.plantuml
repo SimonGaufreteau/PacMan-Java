@@ -62,20 +62,20 @@ title __PACMAN-JAVA's Class Diagram__\n
   }
   
 
-  namespace TasksThreads {
-    class TasksThreads.DisplayThread {
+  namespace VueTasks {
+    class VueTasks.DisplayThread {
     }
   }
   
 
-  namespace TasksThreads {
-    class TasksThreads.EndOfGameTask {
+  namespace VueTasks {
+    class VueTasks.EndOfGameTask {
     }
   }
   
 
-  namespace TasksThreads {
-    class TasksThreads.LivesTask {
+  namespace VueTasks {
+    class VueTasks.LivesTask {
     }
   }
   
@@ -89,8 +89,8 @@ title __PACMAN-JAVA's Class Diagram__\n
   Controller.EventController o-- Modele.ModelGrid : modelGrid
   Controller.EventController o-- Modele.SimplePacMan : spm
   Controller.EventController o-- Modele.ThreadController : threadController
-  Modele.ThreadController o-- TasksThreads.DisplayThread : displayThread
-  Modele.ThreadController o-- TasksThreads.EndOfGameTask : endOfGameTask
+  Modele.ThreadController o-- VueTasks.DisplayThread : displayThread
+  Modele.ThreadController o-- VueTasks.EndOfGameTask : endOfGameTask
   Modele.ThreadController o-- Modele.ModelGrid : modelGrid
   Modele.ThreadController o-- Controller.BindingController.direction : paneDirection
   Modele.Entity o-- Modele.Depl : direction
@@ -98,13 +98,13 @@ title __PACMAN-JAVA's Class Diagram__\n
   Modele.Ghost -up-|> Modele.Entity
   Modele.SimplePacMan -up-|> Modele.Entity
   Modele.SimplePacMan o-- Modele.Depl : cachedDirection
-  TasksThreads.DisplayThread -up-|> javafx.concurrent.Task
-  TasksThreads.DisplayThread o-- Modele.ModelGrid : modelGrid
-  TasksThreads.EndOfGameTask -up-|> javafx.concurrent.Task
-  TasksThreads.EndOfGameTask o-- Modele.ThreadController : controller
-  TasksThreads.EndOfGameTask o-- Modele.ModelGrid : modelGrid
-  TasksThreads.LivesTask -up-|> javafx.concurrent.Task
-  TasksThreads.LivesTask o-- Modele.SimplePacMan : simplePacMan
+  VueTasks.DisplayThread -up-|> javafx.concurrent.Task
+  VueTasks.DisplayThread o-- Modele.ModelGrid : modelGrid
+  VueTasks.EndOfGameTask -up-|> javafx.concurrent.Task
+  VueTasks.EndOfGameTask o-- Modele.ThreadController : controller
+  VueTasks.EndOfGameTask o-- Modele.ModelGrid : modelGrid
+  VueTasks.LivesTask -up-|> javafx.concurrent.Task
+  VueTasks.LivesTask o-- Modele.SimplePacMan : simplePacMan
   Vue.MainVue -up-|> javafx.application.Application
 
 

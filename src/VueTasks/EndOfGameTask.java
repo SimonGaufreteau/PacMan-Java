@@ -1,4 +1,4 @@
-package TasksThreads;
+package VueTasks;
 
 import Modele.ModelGrid;
 import javafx.concurrent.Task;

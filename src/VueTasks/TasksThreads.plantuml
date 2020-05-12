@@ -2,8 +2,8 @@
 
 title __TASKSTHREADS's Class Diagram__\n
 
-  namespace TasksThreads {
-    class TasksThreads.DisplayThread {
+  namespace VueTasks {
+    class VueTasks.DisplayThread {
         {static} + REFRESH_DELAY : int
         ~ imBG : Image
         ~ imBigPoint : Image
@@ -26,8 +26,8 @@ title __TASKSTHREADS's Class Diagram__\n
   }
   
 
-  namespace TasksThreads {
-    class TasksThreads.EndOfGameTask {
+  namespace VueTasks {
+    class VueTasks.EndOfGameTask {
         {static} - LOSE_TEXT : String
         {static} - VICTORY_TEXT : String
         - running : AtomicBoolean
@@ -39,8 +39,8 @@ title __TASKSTHREADS's Class Diagram__\n
   }
   
 
-  namespace TasksThreads {
-    class TasksThreads.LivesTask {
+  namespace VueTasks {
+    class VueTasks.LivesTask {
         - running : AtomicBoolean
         + LivesTask()
         + setPacman()
@@ -50,13 +50,13 @@ title __TASKSTHREADS's Class Diagram__\n
   }
   
 
-  TasksThreads.DisplayThread -up-|> javafx.concurrent.Task
-  TasksThreads.DisplayThread o-- Modele.ModelGrid : modelGrid
-  TasksThreads.EndOfGameTask -up-|> javafx.concurrent.Task
-  TasksThreads.EndOfGameTask o-- Modele.ThreadController : controller
-  TasksThreads.EndOfGameTask o-- Modele.ModelGrid : modelGrid
-  TasksThreads.LivesTask -up-|> javafx.concurrent.Task
-  TasksThreads.LivesTask o-- Modele.SimplePacMan : simplePacMan
+  VueTasks.DisplayThread -up-|> javafx.concurrent.Task
+  VueTasks.DisplayThread o-- Modele.ModelGrid : modelGrid
+  VueTasks.EndOfGameTask -up-|> javafx.concurrent.Task
+  VueTasks.EndOfGameTask o-- Modele.ThreadController : controller
+  VueTasks.EndOfGameTask o-- Modele.ModelGrid : modelGrid
+  VueTasks.LivesTask -up-|> javafx.concurrent.Task
+  VueTasks.LivesTask o-- Modele.SimplePacMan : simplePacMan
 
 
 right footer

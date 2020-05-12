@@ -1,4 +1,4 @@
-package TasksThreads;
+package VueTasks;
 
 import Modele.SimplePacMan;
 import javafx.concurrent.Task;

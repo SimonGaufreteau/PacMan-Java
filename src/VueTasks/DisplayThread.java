@@ -1,4 +1,4 @@
-package TasksThreads;
+package VueTasks;
 
 import Modele.*;
 import javafx.application.Platform;
